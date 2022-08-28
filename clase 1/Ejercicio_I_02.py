@@ -52,9 +52,6 @@ while(continue_script):
         precio_max = precio_por_kilo
         tipo_mas_caro = tipo_validad
 
-    # D. El promedio de precio por kilo en total.
-    # promedio_precio = suma_precio_bruto / suma_kilos
-
     answer = input('\nDesea continuar? [n]: No | [s]: si\n')
     while(answer.lower() != 'n' and answer.lower() != 's'):
         answer = input('[ERROR] Desea continuar? [n]: No | [s]: si\n')
