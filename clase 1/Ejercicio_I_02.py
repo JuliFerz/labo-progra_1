@@ -10,11 +10,13 @@ D. El promedio de precio por kilo en total.
  """
 continue_script = True
 suma_kilos = 0
-descuento = 0
+descuento = 100
 suma_precio_bruto = 0
 importe_con_descuento = 0
 precio_max = 0
-tipo_mas_caro = ''  # es necesario?
+tipo_mas_caro = ''  # ?
+promedio_precio = 0
+
 
 while(continue_script):
     peso = input('Ingrese el peso del ingrediente: (entre 10 y 100 kilos)\n')
@@ -29,7 +31,7 @@ while(continue_script):
 
     tipo_validad = input(
         'Ingrese el tipo de validad\n[v]: vegetal [a]: animal [m]: mezcla\n')
-    while (tipo_validad != 'v' and tipo_validad != 'a' and tipo_validad != 'm'):
+    while (tipo_validad.lower() != 'v' and tipo_validad.lower() != 'a' and tipo_validad.lower() != 'm'):
         tipo_validad = input('ERROR: Reingrese el tipo de validad:\n')
 
     suma_kilos += peso
@@ -50,7 +52,27 @@ while(continue_script):
         precio_max = precio_por_kilo
         tipo_mas_caro = tipo_validad
 
-    continue_script = False
+    # D. El promedio de precio por kilo en total.
+    promedio_precio = suma_precio_bruto / suma_kilos
+
+    answer = input('\nDesea continuar? [n]: No | [s]: si\n')
+    while(answer.lower() != 'n' and answer.lower() != 's'):
+        answer = input('[ERROR] Desea continuar? [n]: No | [s]: si\n')
+    continue_script = False if answer.lower() == 'n' else continue_script
 # termina
 
+if (tipo_mas_caro == 'v'):
+    tipo_mas_caro = 'Vegetal'
+elif(tipo_mas_caro == 'a'):
+    tipo_mas_caro = 'Animal'
+elif(tipo_mas_caro == 'm'):
+    tipo_mas_caro = 'Mezcla'
+
 # D. El promedio de precio por kilo en total.
+# promedio_precio = suma_precio_bruto / suma_kilos
+
+print(f'Importe BRUTO a pagar: ${suma_precio_bruto}')
+print(
+    f'Importe a pagar con descuento ({descuento}%): ${importe_con_descuento}') if importe_con_descuento else ''
+print(f'El tipo de alimento mas caro es: {tipo_mas_caro}')
+print(f'Promedio de precio por kilo: ${promedio_precio}')
