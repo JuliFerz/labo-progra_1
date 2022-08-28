@@ -53,7 +53,7 @@ while(continue_script):
         tipo_mas_caro = tipo_validad
 
     # D. El promedio de precio por kilo en total.
-    promedio_precio = suma_precio_bruto / suma_kilos
+    # promedio_precio = suma_precio_bruto / suma_kilos
 
     answer = input('\nDesea continuar? [n]: No | [s]: si\n')
     while(answer.lower() != 'n' and answer.lower() != 's'):
@@ -69,7 +69,7 @@ elif(tipo_mas_caro == 'm'):
     tipo_mas_caro = 'Mezcla'
 
 # D. El promedio de precio por kilo en total.
-# promedio_precio = suma_precio_bruto / suma_kilos
+promedio_precio = suma_precio_bruto / suma_kilos
 
 print(f'Importe BRUTO a pagar: ${suma_precio_bruto}')
 print(
