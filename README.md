@@ -1,5 +1,5 @@
 # labo-progra_1
-## nombre
+### nombre
 Julian Fernandez
-## div
+### div
 H
