@@ -41,7 +41,6 @@ for heroe in heroes_para_reclutar:
         heroe_reclutar['origin'] = heroes_info[heroe]['Origen']
         heroe_reclutar['habilities'] = set(heroes_info[heroe]['Habilidades'])
         info_heroes_reclutar.append(heroe_reclutar)
-# print(info_heroes_reclutar)
 
 for heroe in info_heroes_reclutar:
     habilidad = ''
@@ -49,10 +48,8 @@ for heroe in info_heroes_reclutar:
     for hab in heroe['habilities']:
         habilidad += f'{hab}'
         habilidad += ' | ' if i + 1 < len(heroe['habilities']) else ''
-        # print(i, len(heroe['habilities']))
         i += 1
     print(f'ID: {heroe["id"]}, Codename: {heroe["codename"]}')
     print(f'Identidad: {heroe["identity"]}, Origen {heroe["origin"]}')
-    print(f'Habilidades: {heroe["habilities"]}')
-    print(f'PRUEBA: {habilidad}')
+    print(f'Habilidades: {habilidad}')
     print('------------------------')
