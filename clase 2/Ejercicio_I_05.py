@@ -45,7 +45,6 @@ for tup in habilidades_UTN:
         i = 0
         for hab in temp_list:
             if(nro_poder < hab[pos]):
-                # print(i, nro_poder)
                 temp_list.insert(i, tup)
                 break
             i += 1
