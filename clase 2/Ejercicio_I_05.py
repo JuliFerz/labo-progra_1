@@ -1,3 +1,8 @@
+""" 
+Autor: Fernandez, Julian
+Divison: H
+Ejercicio: Ejercicio_I_05
+"""
 habilidades = [
     {
         "Nombre": "Vision-X",
@@ -50,7 +55,13 @@ for tup in habilidades_UTN:
                 temp_list.insert(i, tup)
                 break
             i += 1
+# print(temp_list)
+'''
+lista: [64, 32, 256, 1024, 128, 512]
+orden: [32, 64, 128, 256, 512, 1024]
 
+obtengo: [512, 128, 32, 64, 256, 1024]
+'''
 i = 1
 print('habilidades_UTN')
 for info in temp_list:
