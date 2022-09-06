@@ -33,35 +33,27 @@ habilidades = [
 habilidades_UTN = []
 for hab in habilidades:
     dic_utn = []
-    dic_utn.append(hab['Nombre'])  # revisar, tomar objeto entero
-    dic_utn.append(hab['Poder'])
+    for value in hab.values():
+        dic_utn.append(value)
     dic_utn = tuple(dic_utn)
     habilidades_UTN.append(dic_utn)
-# print(habilidades_UTN)
 
-max_poder = 0  # REVISAR no hardcodear un valor, tomar un valor real
+max_poder = habilidades_UTN[0][1]
 pos = 1
 temp_list = []
 for tup in habilidades_UTN:
     nro_poder = tup[pos]
-    if (nro_poder > max_poder):
+    if (nro_poder >= max_poder):
         max_poder = nro_poder
         temp_list.append(tup)
     else:
         i = 0
         for hab in temp_list:
             if(nro_poder < hab[pos]):
-                # print(i, nro_poder)
                 temp_list.insert(i, tup)
                 break
             i += 1
-# print(temp_list)
-'''
-lista: [64, 32, 256, 1024, 128, 512]
-orden: [32, 64, 128, 256, 512, 1024]
 
-obtengo: [512, 128, 32, 64, 256, 1024] 
-'''
 i = 1
 print('habilidades_UTN')
 for info in temp_list:
