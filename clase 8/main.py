@@ -5,7 +5,7 @@ lista_heroes = leer_archivo(path)
 
 def stark_marvel_app_5(lista: list) -> str:
     '''
-    Funcion principal de la aplicación
+    Funcion principal de la aplicación..
     Devuelve los datos de la opción elegida por el usuario
     '''
     while True:

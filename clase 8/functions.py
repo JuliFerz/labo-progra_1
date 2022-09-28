@@ -5,7 +5,7 @@ import re
 
 def imprimir_menu_desafio_5() -> str:
     '''
-    Funcion que imprime el menu de la aplicación
+    Funcion que imprime el menu de la aplicación.
     '''
     imprimir_dato('''
 \n[A] Recorrer la lista imprimiendo por consola el nombre de cada superhéroe de género M\n\
