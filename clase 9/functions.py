@@ -5,17 +5,6 @@ lista = [3, 6, 1, 4, 8, 2, 7, 5]
 
 # lista = random.sample(range(1000), 50)
 
-# METODO 1 - mio
-# 1. Crear una lista temporal vacía (copiando la lista entera (para no sobreescribir la existente))
-# 2. Tomar el primer elemento de la lista y guardarlo como si fuera un maximo
-# 3. Loopear la lista original consultando si el maximo hardcodeado es mayor al elemento en la posición de la iteración
-# 4. En caso de serlo, appendear el elemento en la lista temporal
-# 5. En caso de NO serlo, recorrer la lista temporal y evaluar el minimo
-#
-
-# METODO 2 -
-
-# [5 (10) 14 20]
 
 """ def _sort(lista):  # Sort test
     for j in range(len(lista) - 1):
