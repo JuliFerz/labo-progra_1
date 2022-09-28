@@ -1,6 +1,5 @@
 import re
 import json
-path = './clase 11/data_stark.json'
 
 
 def parse_json(path: str) -> list:
@@ -20,7 +19,7 @@ def guardar_resultados(path: str, content: str) -> str:
     Recibe una dirección y el conteido que debe guardar
     Devuelve la creación/sobreescritura del archivo con el contenido recibido
     '''
-    aux_path = './clase 11/results/'
+    aux_path = './clase_11/results/'
 
     if re.search('.csv$', path):
         with open(f'{aux_path}{path}', 'w') as file:

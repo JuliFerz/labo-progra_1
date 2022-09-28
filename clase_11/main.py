@@ -1,5 +1,6 @@
 from functions import *
 import re
+path = './clase_11/data_stark.json'
 lista_heroes = parse_json(path)
 
 
