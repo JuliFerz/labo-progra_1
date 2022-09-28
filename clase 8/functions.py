@@ -79,7 +79,7 @@ def guardar_archivo(file_name: str, content: str) -> str:
     '''
     retorno = False
     mensaje = f'Error al crear el archivo: {file_name}\nRevisar nombre y formato válido (.csv)'
-    aux_path = '../clase 8/results/'
+    aux_path = './clase 8/results/'
 
     if(re.search('[a-zA-Z]+\.csv$', file_name)):
         with open(f'{aux_path}{file_name}', 'w') as file:
