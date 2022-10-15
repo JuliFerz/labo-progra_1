@@ -63,8 +63,8 @@ def b_sort(lista: list, key: str) -> list:
     '''
     lista = sanitizar_entero(lista, key)
     for i in range(len(lista)):
-        for j in range(len(lista)):
-            if lista[j][key] < lista[i][key]:
+        for j in range(i, len(lista)):
+            if lista[j][key] > lista[i][key]:
                 lista[i], lista[j] = lista[j], lista[i]
     return lista
 
