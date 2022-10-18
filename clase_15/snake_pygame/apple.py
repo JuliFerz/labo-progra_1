@@ -5,11 +5,11 @@ import colores as color
 RES_IMG = (40, 40)
 
 
-def resize_img(img):
+def resize_img(img: str):
     return py.transform.scale(img, RES_IMG)
 
 
-def create_apple(x, y):
+def create_apple(x: int, y: int) -> dict:
     dict_apple = {}
     dict_apple['img'] = resize_img(py.image.load(img.APPLE))
     dict_apple['rect'] = py.Rect(x, y, RES_IMG[0], RES_IMG[1])

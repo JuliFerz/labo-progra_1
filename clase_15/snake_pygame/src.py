@@ -1,4 +1,4 @@
-AUX_PATH = 'D:/Users/julian/Documents/Julian/UTN/1. Primer cuatrimestre/labo-progra_1/clase_15/snake_pygame/imagenes'
+AUX_PATH = '../labo-progra_1/clase_15/snake_pygame/medios'
 
 UP_HEAD = f'{AUX_PATH}/up_head.png'
 DW_HEAD = f'{AUX_PATH}/dw_head.png'
@@ -17,3 +17,9 @@ ROTATE_DR = f'{AUX_PATH}/03_pliegue.png'
 
 
 APPLE = f'{AUX_PATH}/apple.png'
+
+M_FONDO = f'{AUX_PATH}/bkgd_m.wav'
+
+S_CRUNCH = f'{AUX_PATH}/crunchy.mp3'
+
+S_PUNCH = f'{AUX_PATH}/PUNCH.mp3'

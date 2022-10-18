@@ -1,25 +1,26 @@
-import pygame
+import pygame as py
 import random
 import snake as sn
 import apple as apl
 import functions as fn
 import colores as color
-import src as img  # SACAR
+import music
+import src  # SACAR
 # 7
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 
-pygame.init()
+py.init()
 
-main_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('SNAKE | Pygame')
+main_screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+py.display.set_caption('🐍 SNAKE | Pygame')
 
 
 # TIMER - pos (1seg)
-pos_timer = pygame.USEREVENT
-# seg_timer = 1000
-pygame.time.set_timer(pos_timer, 500)
+pos_timer = py.USEREVENT
+delay = 200
+py.time.set_timer(pos_timer, delay)
 
 # SNAKE & res
 _posX = 80
@@ -27,11 +28,11 @@ _posY = 0
 mov_snake = 40
 
 # AUX VAR
-keypressed = False
-# x, y, up, down
-last_key = [False, False, False, False]
-boost = 1
 
+
+# texto
+txt_font = py.font.SysFont('Arial Narrow', 50)  # REVISAR
+# txt_score = txt_font.render(f'Score ', True, color.BLANCO)
 
 # crear objetos
 snake = sn.create_snake(_posX, _posY)
@@ -45,34 +46,69 @@ apple = apl.create_apple(r_posX, r_posY)
 print('APPLE 🍎', apple)
 
 
+# set music
+py.mixer.init()
+fn.play_music(music.background_m)
+
 running = True
 while running:
-    for event in pygame.event.get():
+    # background_m.play()
+
+    for event in py.event.get():
         # QUIT game
-        if event.type == pygame.QUIT:
+        if event.type == py.QUIT:
             running = False
 
-        # MOVIMIENTO - snake
-        if event.type == pygame.KEYDOWN and snake['in_game']:
-            # if snake['in_game']:
-            if event.key == pygame.K_LEFT:
-                fn.draw_mov(snake, -mov_snake, 0)
+        # DIRECCION - snake
+        if event.type == py.KEYDOWN and snake['in_game']:
+            if event.key == py.K_LEFT:
                 snake_img = 'L_HEAD'
-            if event.key == pygame.K_RIGHT:
-                fn.draw_mov(snake, mov_snake, 0)
+            if event.key == py.K_RIGHT:
                 snake_img = 'R_HEAD'
-            if event.key == pygame.K_UP:
-                fn.draw_mov(snake, 0, -mov_snake)
+            if event.key == py.K_UP:
                 snake_img = 'UP_HEAD'
-            if event.key == pygame.K_DOWN:
-                fn.draw_mov(snake, 0, mov_snake)
+            if event.key == py.K_DOWN:
                 snake_img = 'DW_HEAD'
-            # print(f'se presiono: {pygame.key.name(event.key)}')
+            if event.key == py.K_ESCAPE:
+                running = False
+                py.QUIT
+        # REINICIO
+        elif event.type == py.KEYDOWN and not snake['in_game']:
+            if event.key == py.K_r:
+                print('Reinicio 🔁')
+                fn.play_music(music.background_m)
+                snake = sn.create_snake(_posX, _posY)
+                snake_img = 'R_HEAD'
+                r_posX = fn.random_gen()[0]
+                r_posY = fn.random_gen()[1]
+                apple = apl.create_apple(r_posX, r_posY)
+                snake['in_game'] = True
+            # print(f'se presiono: {py.key.name(event.key)}')
 
-        apple = fn.collision_obj(snake, apple)  # chequear si colisionó o no
+        # MOVIMIENTO - snake
+        if event.type == py.USEREVENT:
+            if event.type == pos_timer and snake['in_game']:
+                pass
+                key_list = py.key.get_pressed()
+                if snake_img == 'L_HEAD':
+                    fn.draw_mov(snake, -mov_snake, 0)
+                elif snake_img == 'R_HEAD':
+                    fn.draw_mov(snake, mov_snake, 0)
+                elif snake_img == 'UP_HEAD':
+                    fn.draw_mov(snake, 0, -mov_snake)
+                elif snake_img == 'DW_HEAD':
+                    fn.draw_mov(snake, 0, mov_snake)
+                else:
+                    fn.draw_mov(snake, mov_snake, 0)
+                    snake_img = 'R_HEAD'
 
-        main_screen.fill(color.NEGRO)
-        fn.update_mov(apple, '', main_screen)
-        fn.update_mov(snake, snake_img, main_screen)
-    pygame.display.update()
-pygame.quit()
+    apple = fn.collision_obj(snake, apple)  # chequear si colisionó o no
+    main_screen.fill(color.NEGRO)
+
+    txt_score = fn.txt_render(txt_font, snake['score'], color.BLANCO)
+    fn.txt_update(main_screen, txt_score, (SCREEN_WIDTH / 2) - 60, 0)
+
+    fn.update_mov(apple, '', main_screen)
+    fn.update_mov(snake, snake_img, main_screen)
+    py.display.update()
+py.quit()
