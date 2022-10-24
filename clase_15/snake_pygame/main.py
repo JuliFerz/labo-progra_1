@@ -27,8 +27,6 @@ _posX = 80
 _posY = 0
 mov_snake = 40
 
-# AUX VAR
-
 
 # texto
 txt_font = py.font.SysFont('Arial Narrow', 50)  # REVISAR
