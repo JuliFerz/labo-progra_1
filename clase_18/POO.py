@@ -9,7 +9,6 @@ class Personaje:
         self.edad = edad
         self._lista = [id, nombre, apellido, edad]
 
-
     @property  # Getter
     # Convierte una función (método) en una propiedad. Por eso, esta función despues se la debe invocar como variable.nombre
     def nombre(self):
