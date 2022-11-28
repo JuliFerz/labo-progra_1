@@ -4,8 +4,8 @@ class Personaje:
     def __init__(self, id, nombre, apellido, edad) -> None:
         # Atributos del objeto
         self.id = id
-        self.__nombre = nombre
-        self.__apellido = apellido
+        self._nombre = nombre
+        self._apellido = apellido
         self.edad = edad
         self._lista = [id, nombre, apellido, edad]
 
@@ -13,20 +13,20 @@ class Personaje:
     @property  # Getter
     # Convierte una función (método) en una propiedad. Por eso, esta función despues se la debe invocar como variable.nombre
     def nombre(self):
-        return self.__nombre
+        return self._nombre
 
     @nombre.setter  # Setter
     # Crea una propiedad que puede asignarle un valor a la property (key)
     def set_nombre(self, value):
-        self.__nombre = value
+        self._nombre = value
 
     # Metodo de instancia. Se lo printea como: print(instancia.descripcion())
     def descripcion(self) -> str:
-        return '{0}_{1}'.format(self.__nombre, self.__apellido)
+        return '{0}_{1}'.format(self._nombre, self._apellido)
 
     # Método especial: Mostrar objeto. Se lo printea como print(intancia)
     def __str__(self) -> str:
-        return 'Nombre: {0}; Apellido: {1}'.format(self.__nombre, self.__apellido)
+        return 'Nombre: {0}; Apellido: {1}'.format(self._nombre, self._apellido)
 
     # Método especial: Permite utilizar la función len sobre una instancia de esta clase Personaje.
     def __len__(self) -> str:
@@ -51,21 +51,18 @@ class Personaje:
 
 # Inheritance
 class Poderes(Personaje):
-
-    # def __init__(self, id, nombre, apellido, edad):
-    """def __init__(self, id, nombre, apellido, edad, poder):
-
-        Personaje.__init__(id, nombre, apellido, edad)  
-        self.poder = poder """
+    def __init__(self, id, nombre, apellido, edad, poder):
+        Personaje.__init__(self, id, nombre, apellido, edad)  # paso los parametros a la clase padre
+        self.poder = poder
 
     def __str__(self) -> str:
-        return 'Nombre: {0}; Poder: {1}'.format(self.__nombre, self.poder)
+        return 'Nombre: {0}; Poder: {1}'.format(self._nombre, self.poder)
 
 
 # Asignar atributos a la clase - Instanciar
 personaje_A = Personaje(0, 'Marty', 'McFly', 18)
 # llamar a un método de la clase:
-# personaje_A.set_nombre = 'JORGEE'
+# personaje_A.set_nombre = 'JORGEE' # setter
 # print(personaje_A.descripcion()) # Marty
 
 # ------------- METODOS ESPECIALES ------------- #
@@ -94,8 +91,8 @@ personaje_A = Personaje(0, 'Marty', 'McFly', 18)
 
 
 # ------------- Inheritance ------------- #
-# personaje_B = Poderes(1, 'Dr.', 'Sofenmacher', 18)
-# print(personaje_B)
+personaje_B = Poderes(1, 'Dr.', 'Sofenmacher', 18, 'Volar')
+print(personaje_B)
 
-# print(personaje_A.__nombre)  # Intentar traer un atributo
-# OUTPUT: AttributeError: 'Personaje' object has no attribute '__nombre'
+# print(personaje_A._nombre)  # Intentar traer un atributo
+# OUTPUT: AttributeError: 'Personaje' object has no attribute '_nombre'

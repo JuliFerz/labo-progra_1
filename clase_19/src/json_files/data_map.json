@@ -1,0 +1,157 @@
+{
+    "desert": {  
+        "name":"desert",
+        "Objects": [
+            {
+                "name": "Bush",
+                "qty_elements": 2
+            },{
+                "name": "Cactus",
+                "qty_elements": 3
+            },{
+                "name": "Crate",
+                "qty_elements": 1
+            },{
+                "name": "Grass",
+                "qty_elements": 2
+            },{
+                "name": "Sign",
+                "qty_elements": 1
+            },{
+                "name": "SignArrow",
+                "qty_elements": 1
+            },{
+                "name": "Skeleton",
+                "qty_elements": 1
+            },{
+                "name": "Stone",
+                "qty_elements": 1
+            },{
+                "name": "StoneBlock",
+                "qty_elements": 1
+            },{
+                "name": "Tree",
+                "qty_elements": 1
+            }
+        ],
+        "Tiles": 16
+    },
+    "forest": {  
+        "name":"forest",
+        "Objects": [
+            {
+                "name": "Bush",
+                "qty_elements": 4
+            },{
+                "name": "Crate",
+                "qty_elements": 1
+            },{
+                "name": "Mushroom",
+                "qty_elements": 2
+            },{
+                "name": "Sign",
+                "qty_elements": 2
+            },{
+                "name": "Stone",
+                "qty_elements": 1
+            },{
+                "name": "Tree",
+                "qty_elements": 3
+            }
+        ],
+        "Tiles": 18
+    },
+    "graveyard": {  
+        "name":"graveyard",
+        "Objects": [
+            {
+                "name": "ArrowSign",
+                "qty_elements": 1
+            },{
+                "name": "Bush",
+                "qty_elements": 2
+            },{
+                "name": "Crate",
+                "qty_elements": 1
+            },{
+                "name": "DeadBush",
+                "qty_elements": 1
+            },{
+                "name": "Sign",
+                "qty_elements": 1
+            },{
+                "name": "Skeleton",
+                "qty_elements": 1
+            },{
+                "name": "TombStone",
+                "qty_elements": 2
+            },{
+                "name": "Tree",
+                "qty_elements": 1
+            }
+        ],
+        "Tiles": 16
+    },
+    "space_ship": {  
+        "name":"space_ship",
+            "Objects": [
+                {
+                    "name": "Barrel",
+                    "qty_elements": 2
+                },{
+                    "name": "Box",
+                    "qty_elements": 1
+                },{
+                    "name": "DoorLocked",
+                    "qty_elements": 1
+                },{
+                    "name": "DoorOpen",
+                    "qty_elements": 2
+                },{
+                    "name": "DoorUnlocked",
+                    "qty_elements": 1
+                },{
+                    "name": "Saw",
+                    "qty_elements": 1
+                },{
+                    "name": "Switch",
+                    "qty_elements": 2
+                }
+            ],
+            "Tiles": 15
+        },
+    "winter":
+        {  
+        "Objects": [
+            {
+                "name": "Crate",
+                "qty_elements": 1
+            },{
+                "name": "Crystal",
+                "qty_elements": 1
+            },{
+                "name": "Crate",
+                "qty_elements": 1
+            },{
+                "name": "IceBox",
+                "qty_elements": 1
+            },{
+                "name": "Igloo",
+                "qty_elements": 1
+            },{
+                "name": "Sign",
+                "qty_elements": 2
+            },{
+                "name": "SnowMan",
+                "qty_elements": 2
+            },{
+                "name": "Stone",
+                "qty_elements": 1
+            },{
+                "name": "Tree",
+                "qty_elements": 2
+            }
+        ],
+        "Tiles": 18
+    }
+}
