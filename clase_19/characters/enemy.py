@@ -5,22 +5,24 @@ from constantes import *
 
 
 class Enemy:
-    def __init__(self,
-                 manager,
-                 entity,
-                 c_type,
-                 name,
-                 animations,
-                 separate_files,
-                 mvm_frame_rate,
-                 anim_frame_rate,
-                 level_tiles=[],
-                 x=0,
-                 y=0,
-                 speed_walk=1,
-                 damage=0.1,
-                 life=50,
-                 lives=1):
+    def __init__(
+            self,
+            manager,
+            entity,
+            c_type,
+            name,
+            animations,
+            separate_files,
+            mvm_frame_rate,
+            anim_frame_rate,
+            points,
+            level_tiles=[],
+            x=0,
+            y=0,
+            speed_walk=1,
+            damage=0.1,
+            life=50,
+            lives=1):
         self._manager = manager
          
         # LISTAS - Sprites
@@ -61,7 +63,7 @@ class Enemy:
         self.move_x = 0
         self.speed_walk = speed_walk
         self.speed = self.speed_walk
-        self.speed_run = self.speed * 2 # REVISAR - json
+        self.speed_run = self.speed * 2
         self.direction = pygame.math.Vector2(0, 0)
         self.random_x = random.randrange(0, ANCHO_VENTANA - self.rect_collition.w)
         self.walking = False
@@ -75,6 +77,7 @@ class Enemy:
         self.is_collide_x = False
 
         # others
+        self.points = points
         self.damage = damage
         self.life = life
         self.lives = lives
@@ -243,7 +246,7 @@ class Enemy:
                 self.is_collide_x = False
 
             self.horizontal_collide()
-            self._manager.horizontal_collide_pj()
+            self._manager.horizontal_collide_pj(self.entity)
 
     def upd_animation(self, delta_ms):
         self.frame_sum_anim += delta_ms

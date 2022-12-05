@@ -1,94 +1,107 @@
 import pygame, sys
-from constantes import *
-from gui_widget import Widget
-from gui_button import Button
-from gui_label import Label
-from form_gui import Form
+from gui.constantes import * # REVISAR
+from gui.gui_button import Button
+from gui.form_gui import Form
+
+from settings import get_levels
+
 
 class SubFormLevelSelector(Form):
-    def __init__(self, name, main_surface, main_rect, x, y, w, h, color_background, color_border, levels=0, active=True):
-        # super().__init__(name, main_surface, x, y, w, h, color_background, color_border, active)
-        # self.slave_surface = main_surface
-        self.x, self.y, self.w, self.h = x, y, w, h
+    def __init__(self, name, main_surface, main_rect, x, y, w, h, color_background, color_border, music, levels=0, qty_levels=0, active=True, slave_background=''):
+        # super().__init__(name, main_surface, x, y, w, h, color_background, color_border, active, slave_background)
+        self.music_manager = music
+        self.playing_music = False
+        # self.id_music = 'menu'
+        self.active = active
 
-        self._main_surface = main_surface
-        self._main_rect = main_rect
-        
+        self.x, self.y, self.w, self.h = x, y, w, h
+        self.main_surface = main_surface
+        self.main_rect = main_rect
         self.color_background = color_background
         self.color_border = color_border
 
+        # self.slave_surface = pygame.Surface((self.w, self.h))
+        # self.slave_rect = self.slave_surface.get_rect(topleft=(self.x, self.y))
+    
+        # self.background_img = pygame.image.load(f'{PATH_IMAGE}/gui/background.png').convert_alpha()
+        # self.background_rect = self.background_img.get_rect(topleft=(0,0))
+        # self.background_img = pygame.transform.scale(self.background_img,(ANCHO_VENTANA, ALTO_VENTANA))
 
-        # slave
-        self.slave_surface = pygame.Surface((self.w, self.h))
-        self.slave_rect = self.slave_surface.get_rect(center=(self.x, self.y))
-        self.slave_rect_collide = self.slave_surface.get_rect(
-            center=(
-                self.x + self._main_rect.x,
-                self.y + self._main_rect.y
-            ))
+        if slave_background:
+            # image
+            self.slave_background = pygame.image.load(slave_background).convert_alpha()
+            # resize
+            self.slave_background = pygame.transform.scale(self.slave_background,(self.w, self.h))
+            # rect
+            self.slave_background_rect = self.slave_background.get_rect(center=(self.x, self.y))
+            # collide_rect
+            self.slave_background_rect_collide = self.slave_background.get_rect(
+                center=(
+                    self.x + self.main_rect.x, 
+                    self.y + self.main_rect.y
+                ))
 
-        self.list_levels = levels
-        if self.list_levels:
-            self.list_levels = self.show_levels(self.list_levels)
+        # levels
+        self.qty_levels = qty_levels
+        self.game_levels = levels
+        self.list_levels = ''
+        if self.qty_levels:
+            self.list_levels = self.show_levels(self.qty_levels)
         
 
     def show_levels(self, list_levels):
         temp_list = []
         y = 0
-        for i, level in enumerate(list_levels):
+        for i in range(list_levels):
             temp_list.append(
                 Button(
                     # inherit_rect=self,
-                    main_surface=self.slave_surface,
-                    main_rect=self.slave_rect_collide,
-                    x=self.slave_rect.w/2,
-                    y=50 + y,
-                    w=500,
-                    h=70,
-                    color_background=BLUE, # change to background img
-                    color_border='', # think in how button image works while pressing click on it
+                    main_surface=self.slave_background,
+                    main_rect=self.slave_background_rect_collide,
+                    x=self.slave_background_rect.w/2 - 10,
+                    y=self.slave_background_rect.h/6 + y,
+                    w=400,
+                    h=60,
+                    color_background=BLUE,
+                    slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+                    color_border='', # think in how button image works while pressing click on it - animation
                     on_click=self.on_click,
-                    on_click_param='form_main_menu',
+                    on_click_param='form_play_level',
+                    on_click_param_aux=f'level_{i+1}',
                     text='Level {}'.format(i+1),
+                    text_pos='left',
                     font=PATH_FONT,
                     font_size=25,
                     font_color='black'
                 )
             )
-            y += 90
+            y += 70
         return temp_list
 
-    def on_click(self, form): 
-        if form == 'exit':
-            sys.exit()
-        else:
-            self.update_view_form(form)
 
-    def click_collition(self, mouse_xy):
-        # colisionar SOLO con botones que estén dentro del segundo form
-        if self.slave_rect_collide.collidepoint(mouse_xy):
-            print('l0l')
+    def instance_level(self, id):
+        self.level = get_levels(self.game_levels[id], id)
+    
+    def on_click(self, id_form, id):
+        self.instance_level(id)
+        self.update_view_form(id_form, id)
 
-    def get_mouse_click(self, event_list):
-        # print(pygame.mouse.get_pos())
-        for event in event_list:
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-                # print(event.pos)
-                self.click_collition(event.pos)
+    
+    def update_view_form(self, id_form, id):
+        super().update_view_form(id_form) # apaga los forms y activa el actual
+        self.dict_forms[id_form].running = True
+        self.dict_forms[id_form].change_level(self.level, id)
 
     def update(self, event_list):
-        # No se debe dibujar con la herencia. Sobreescribe el slave_surface de form_main_menu_level_selection
-        # super().draw()
         
-        # self.get_mouse_click(event_list)
-
         if self.list_levels:
-            for level in self.list_levels:
+            for i, level in enumerate(self.list_levels):
                 level.update(event_list)
+                # if i == 2:
+                #     print(level.slave_background_rect_collide)
                 level.draw()
+        
+        # self.draw()
 
     def draw(self):
-        # pygame.draw.rect(self.slave_surface, BLUE, self.slave_rect_collide)
         pass
-        # print(self.list_levels)

@@ -5,13 +5,14 @@ from constantes import *
 
 
 class Bullet:
-    def __init__(self, entity, pos_x, flip, mouse_xy=''):
+    def __init__(self, entity, instance, pos_x, flip, mouse_xy=''):
         # self.bullet = pygame.draw.rect(surface, RED, (x, y, 3, 3))
         # self.bullet = Aux.get_surface_from_sprite(PATH_IMAGE+'/assets/bullet/bullet.png',1,4,2)
-        self.bullet = Aux.get_surface_from_sprite(PATH_IMAGE+'/assets/bullet/bullet_2.png',1,1)
+        self.bullet = Aux.get_surface_from_sprite(PATH_IMAGE+'/assets/bullet/bullet_3.png',1,1)
 
         # entity
         self.entity = entity # NUEVO
+        self.pj_instance = instance
 
         # FPS
         self.anim_frame_rate = 85

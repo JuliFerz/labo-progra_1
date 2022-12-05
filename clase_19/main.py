@@ -2,49 +2,38 @@ import pygame, sys
 from constantes import *
 from mouse import Cursor
 from level import Level
-from settings import level_map
-from gui import *
+from menu import Menu
+from settings import game_levels, game_config
 
 #  pygame.FULLSCREEN
 screen = pygame.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 pygame.display.set_caption('PYGAME | Juego')
 pygame.init()
+pygame.mixer.init()
 clock = pygame.time.Clock()
 
-
+start_time = pygame.time.get_ticks()
 # level = Level(level_map, screen) # REVISAR hacer en el form
+
+level = Menu(screen, game_levels, game_config)
 
 pygame.mouse.set_visible(False)
 cursor = Cursor()
-
-
 running = True
+
 while running:
-    for event in pygame.event.get():
+    event_list = pygame.event.get()
+    for event in event_list:
         if event.type == pygame.QUIT:
             running = False
             sys.exit()
-        elif event.type == pygame.KEYDOWN: # Test
-            if event.key == pygame.K_ESCAPE:
-                running = False
-                sys.exit()
-            if event.key == pygame.K_p:
-                pass
-        elif event.type == pygame.KEYUP:
-            ## Revisar
-            pass
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            ## Revisar
-            pass
 
     delta_ms = clock.tick(FPS)
-
-    # Draw Screen, Cursor (update) & FPS
-    # screen.blit(imagen_fondo, imagen_fondo.get_rect())
-    # cursor.update(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
+    cursor.update(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
 
     # Execute level
-    # level.run(delta_ms) # REVISAR
+    level.run(event_list, delta_ms) # REVISAR
+    
     cursor.draw(screen)
     pygame.display.flip()
     

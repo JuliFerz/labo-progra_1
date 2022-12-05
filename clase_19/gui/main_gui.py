@@ -22,7 +22,7 @@ form_main_menu = FormMainMenu(
     h=ALTO_VENTANA - 100,
     color_background=RED,
     color_border='',
-    active=True)
+    active=True) 
 
 form_main_menu_selection = FormMainMenuLevelSelection(
     name='form_main_menu_selection',

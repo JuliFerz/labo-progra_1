@@ -99,20 +99,25 @@ class Aux:
                 lista.append(new_surface)
             x = 0
         return lista
+    
+    @staticmethod
+    def get_level_data(list_level, entity):
+        # try except export
+        return list_level[entity]
 
 
 class Json:
     l_characters = []
     l_enemies = []
     l_npc = []
-    l_coins = []
+    l_items = []
 
     @staticmethod
     def load_character_json(path):
         temp_list = []
         with open(path, 'r') as file:
             temp_list = json.load(file)
-        return temp_list['players'], temp_list['enemies'], temp_list['npc'], temp_list['coins']
+        return temp_list['players'], temp_list['enemies'], temp_list['npc'], temp_list['items']
 
     
     @staticmethod
@@ -135,4 +140,13 @@ class Json:
         temp_list = []
         with open(path, 'r') as file:
             temp_list = json.load(file)
-        return temp_list['platforms'], temp_list['players'], temp_list['enemies'], temp_list['coins']
+        return temp_list['platforms'], temp_list['players'], temp_list['enemies'], temp_list['items']
+
+    # NUEVO
+    @staticmethod
+    def load_json_info(path):
+        temp_list = []
+        with open(path, 'r') as file:
+            temp_list = json.load(file)
+        return temp_list
+    

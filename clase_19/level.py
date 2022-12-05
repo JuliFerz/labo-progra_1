@@ -1,17 +1,24 @@
+# more like level manager
 import pygame
 from constantes import *
 from manager_modules import *
 
-
+# level_data -> level['level_1']
+# surface -> slave_surface
 class Level:
-    def __init__(self, level_data, surface):
+    def __init__(self, level_data, running, surface, music_manager):
         ## Level config ##
         self.display_surface = surface
+        self.display_rect = self.display_surface.get_rect()
+
+        self.running = running
+        self.music_manager = music_manager
         self.level_data = level_data
         self.setup_level(self.level_data)
-        # self.background_image = background_image
-        # self.world_shift = 0
 
+        # self.world_shift = 0
+        # self.background_image = self.get_background(self.level_data['background'])
+    
     def _subscribe_instance(self, list_ent, instance):
         for entity in list_ent:
             entity._manager = instance
@@ -23,7 +30,7 @@ class Level:
         # self.players = pygame.sprite.GroupSingle()
         self.players = []
         self.enemies = []
-        self.coins = []
+        self.items = []
 
         ## Platforms ##
         for platform in layout['platform']:
@@ -39,23 +46,24 @@ class Level:
             enemy.level_tiles = self.tiles
             self.enemies.append(enemy)
         
-        ## Coins ##
-        for coin in layout['coins']:
-            self.coins.append(coin)
+        ## Items ##
+        for item in layout['items']:
+            self.items.append(item)
 
         ## Managers ##
-        self.game_manager = Game_mng.GameManager(self.players, self.enemies, self.coins, self.tiles, self.display_surface)
-        self.bullet_manager = Bullet_mng.BulletManager(self.game_manager)
-        self.enemy_manager = Enemy_mng.EnemyManager(self.game_manager)
-        self.player_manager = Player_mng.PlayerManager(self.game_manager, self.bullet_manager)
-        self.coin_manager = Coin_mng.CoinManager(self.game_manager)
+        self.game_manager = Game_mng.GameManager(self.players, self.enemies, self.items, self.tiles, self.display_surface)
+        self.bullet_manager = Bullet_mng.BulletManager(self.game_manager, self.music_manager)
+        self.enemy_manager = Enemy_mng.EnemyManager(self.game_manager, self.music_manager)
+        self.player_manager = Player_mng.PlayerManager(self.game_manager, self.bullet_manager, self.music_manager)
+        self.item_manager = Item_mng.ItemManager(self.game_manager, self.music_manager)
 
-        ## Manager subscription ##
+        ## Manager subscription (to instances) ##
         self._subscribe_instance(self.players, self.player_manager) # subscribe manager
         self._subscribe_instance(self.enemies, self.enemy_manager) # subscribe manager
-        self._subscribe_instance(self.coins, self.coin_manager) # subscribe manager
+        self._subscribe_instance(self.items, self.item_manager) # subscribe manager
 
-        self.playing = True
+        # NUEVO
+        # self.game_manager.check_win()
 
 
     ## mover mapa ##
@@ -80,36 +88,46 @@ class Level:
                 pygame.draw.rect(self.display_surface, RED, tile.rect)
                 pygame.draw.rect(self.display_surface, GREEN, tile.rect_collition)
 
+        if self.running:
+            self.update(delta_ms)
+        self.draw(delta_ms)
+
+    def update(self, delta_ms):
+        self.game_manager.check_win()
+        self.game_manager.check_lose()
+        
+        if not self.game_manager.finish:
+            ## Enemies ## 
+            for i, enemy in enumerate(self.enemies):
+                enemy.update(delta_ms)
+            
+            ## Drop items ##
+            for item in self.items:
+                item.update(delta_ms)
+
+            ## Players ##
+            for i, player in enumerate(self.players):
+                player.update(delta_ms)
+
+            ## Manager ##
+            self.bullet_manager.update()
+            self.enemy_manager.update()
+
+    def draw(self, delta_ms):
         ## Level tiles ##
         # método draw heredado de pygame.sprite.Sprite. Dibuja lista de sprites en superficie
         self.tiles.draw(self.display_surface)
-       
-        
-        ## Enemies ## 
+
+         ## Enemies ## 
         for i, enemy in enumerate(self.enemies):
             map(lambda el: el.convert_alpha(),self.enemies[i].animation)
-            if self.playing:
-                enemy.update(delta_ms)
             enemy.draw(self.display_surface)
-
+        
         ## Drop items ##
-        for coin in self.coins:
-            if self.playing:
-                coin.update(delta_ms)
-            coin.draw(self.display_surface)
+        for item in self.items:
+            item.draw(self.display_surface)
 
         ## Players ##
         for i, player in enumerate(self.players):
             map(lambda el: el.convert_alpha(), self.players[i].animation)
-            player.update(delta_ms)
             player.draw(self.display_surface)
-
-
-        ## Manager ##
-        self.bullet_manager.update()
-        self.enemy_manager.update()
-
-        # if DEBUG:
-        #     for tile in self.tiles:
-        #         pygame.draw.rect(self.display_surface, RED, tile.rect)
-        #         pygame.draw.rect(self.display_surface, GREEN, tile.rect_collition)

@@ -4,23 +4,24 @@ from constantes import *
 
 
 class Character:
-    def __init__(self,
-                 manager,
-                 entity,
-                 c_type,
-                 name,
-                 animations,
-                 mvm_frame_rate,
-                 anim_frame_rate,
-                 control_type,
-                 level_tiles=[],
-                 x=0,
-                 y=0,
-                 speed_walk=1,
-                 jump_height=0,
-                 damage=0.1,
-                 life=50,
-                 lives=1):
+    def __init__(
+            self,
+            manager,
+            entity,
+            c_type,
+            name,
+            animations,
+            mvm_frame_rate,
+            anim_frame_rate,
+            control_type,
+            level_tiles=[],
+            x=0,
+            y=0,
+            speed_walk=1,
+            jump_height=0,
+            damage=0.1,
+            life=50,
+            lives=1):
         self._manager = manager
         
         # Sprites
@@ -50,18 +51,20 @@ class Character:
         # spawn
         self.rect.x = x
         self.rect.y = y
-        # self.rect_collition.y = y
+        
+        self.rect_collition = pygame.Rect(
+            self.rect.x + (self.rect.w / 2) - (self.rect.w / 9),
+            self.rect.y,
+            (self.rect.w / 3) + 5,
+            self.rect.h - 24)
 
-        # collide rect
-        self.rect_collition = pygame.Rect(self.rect.x + (self.rect.w / 2) - (
-            self.rect.w / 9), self.rect.y, (self.rect.w / 3) + 5, self.rect.h)
         self.rect_collition.centerx = self.rect.centerx
 
         # movement
         self.control_type = control_type
-        self.speed_walk = speed_walk  # 2
+        self.speed_walk = speed_walk
         self.speed = self.speed_walk
-        self.speed_run = self.speed * 3  # 6
+        self.speed_run = self.speed * 3
         # JUMP
         self.direction = pygame.math.Vector2(0, 0)
         self.jump_height = -jump_height
@@ -70,20 +73,18 @@ class Character:
         self.is_jumping = False
         self.is_on_floor = False
         self.is_falling = False
-        # self.on_ground = False
-        # self.on_ceiling = False
-        # self.on_left = False
-        # self.on_right = False
 
         # others
-        self.damage = damage  # particular
-        self.life = life  # particular
-        self.lives = lives  # particular
-        self.exp = 0 # json
+        self.damage = damage
+        self.max_life = life
+        self.life = self.max_life
+        self.lives = lives
+        self.score = 0 # json
 
         self.bullet_group = []
         self.can_shoot = True
-        self.qty_bullets = 1000000
+        self.max_qty_bullets = 25
+        self.qty_bullets = self.max_qty_bullets
 
     def get_animations(self, animations: list):
         self.animations = {}
@@ -102,7 +103,6 @@ class Character:
         mouse_key_pressed = pygame.mouse.get_pressed()
 
         if self.control_type == 'A':
-            # REVISAR - Pasar a otro objeto
             ## X MOVEMENT ##
             if list_keys[pygame.K_d] and not list_keys[pygame.K_a]:
                 self.do_walk(False)
@@ -110,8 +110,6 @@ class Character:
                 self.do_walk(True)
             elif list_keys[pygame.K_d] and list_keys[pygame.K_a]:
                 self.direction.x = 0
-            # elif list_keys[pygame.K_w]:
-                # self.do_climb()
             else:
                 self.direction.x = 0
             if list_keys[pygame.K_LSHIFT]:
@@ -125,13 +123,11 @@ class Character:
             
             ## ACTIONS ##
             if (list_keys[pygame.K_j]) and self.can_shoot:
-            # if list_keys[pygame.K_j]:
                 self.do_shoot()
-            # elif mouse_key_pressed[0] and self.can_shoot:
-                # self.do_shoot(pygame.mouse.get_pos())
 
             elif (not list_keys[pygame.K_j] and not mouse_key_pressed[0]) and not self.can_shoot:
                 self.can_shoot = True
+
 
         if self.control_type == 'B':
             ## X MOVEMENT ##
@@ -141,8 +137,6 @@ class Character:
                 self.do_walk(True)
             elif list_keys[pygame.K_RIGHT] and list_keys[pygame.K_LEFT]:
                 self.direction.x = 0
-            # elif list_keys[pygame.K_w]:
-                # self.do_climb()
             else:
                 self.direction.x = 0
             if list_keys[pygame.K_RCTRL]:
@@ -152,22 +146,21 @@ class Character:
 
             ## Y MOVEMENT ##
             if list_keys[pygame.K_UP] and (self.is_on_floor or self.can_jump):
-                # if list_keys[pygame.K_SPACE]:
                 self.do_jump()
 
              ## ACTIONS ##
             if list_keys[pygame.K_m] and self.can_shoot:
-            # if list_keys[pygame.K_m]:
                 self.do_shoot()
             elif not list_keys[pygame.K_m] and not self.can_shoot:
                 self.can_shoot = True
 
-    def do_shoot(self, mouse_xy=''):
+    def do_shoot(self):
         if self.qty_bullets > 0:
+            self._manager.sound_effect('shoot')
             self.can_shoot = False
             self.qty_bullets -= 1
 
-            self._manager.shoot(self.entity, self.rect_collition.center, self.flip_x)
+            self._manager.shoot(self.entity, self, self.rect_collition.center, self.flip_x)
 
     def do_walk(self, flip=False):
         if flip:
@@ -177,6 +170,7 @@ class Character:
         self.flip_x = flip
 
     def do_jump(self):
+        self._manager.sound_effect('jump')
         self.direction.y = self.jump_height
         self.is_jumping = True
         self.is_on_floor = False
@@ -184,9 +178,6 @@ class Character:
 
     def do_sprint(self):
         self.speed = self.speed_run
-
-    def do_climb(self):
-        pass
 
     def move_rect_x(self):
         self.rect.x += self.direction.x * self.speed
@@ -221,15 +212,13 @@ class Character:
                 self.is_jumping = False
                 if self.direction.y > 0:  # top - on floor
                     self.rect_collition.bottom = tile.rect_collition.top
-                    self.rect.centery = self.rect_collition.centery
-                    # self.direction.y = 0
+                    self.rect.bottom = self.rect_collition.bottom
                     self.is_on_floor = True
                     self.can_jump = True
                     self.is_falling = False
                 if self.direction.y < 0:  # bottom - on ceiling
                     self.rect_collition.top = tile.rect_collition.bottom
-                    self.rect.centery = self.rect_collition.centery
-                    # self.direction.y = 0
+                    self.rect.bottom = self.rect_collition.bottom
                     self.is_falling = True
                 self.direction.y = 0
 
@@ -241,10 +230,10 @@ class Character:
         else:
             if self.is_on_floor:
                 if self.direction.x != 0:
-                    self.animation = self.animations['walk']  # walk
+                    self.animation = self.animations['walk']
                     self.check_frame_index()
                 else:
-                    self.animation = self.animations['stay']  # stay
+                    self.animation = self.animations['stay']
                     self.check_frame_index()
         self.upd_animation(delta_ms)
 
@@ -261,7 +250,6 @@ class Character:
             self.frame = 0
 
     def update(self, delta_ms):
-        # print(self.rect.center)
         self.frame_sum_mov += delta_ms
         if self.frame_sum_mov >= self.mvm_frame_rate:
             self.frame_sum_mov = 0
@@ -270,8 +258,7 @@ class Character:
             self.control()
             self.vertical_collide()
             self.horizontal_collide()
-            # self._manager.horizontal_collide_enemy()
-            # self._manager.vertical_collide_enemy()
+            self._manager.check_outside_map(self.entity)
 
             # animation
             self.get_animation(delta_ms)

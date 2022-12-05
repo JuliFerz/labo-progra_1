@@ -7,5 +7,6 @@ from . import (
     enemy_manager as Enemy_mng,
     game_manager as Game_mng,
     player_manager as Player_mng,
-    coin_manager as Coin_mng
+    item_manager as Item_mng,
+    music_manager as Music_mng
 )

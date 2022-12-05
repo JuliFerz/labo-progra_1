@@ -11,8 +11,8 @@ SIZE_TILE = 50
 PATH_FONT = 'D:/Users/julian/Documents/Julian/UTN/1. Primer cuatrimestre/labo-progra_1/clase_19/src/font/SuperLegendBoy.ttf'
 
 # DEBUG MODE
-# DEBUG = True  
-DEBUG = False
+DEBUG = True  
+# DEBUG = False
 
 # PATH
 PATH_IMAGE = '../clase_19/src/images'

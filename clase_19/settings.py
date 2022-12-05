@@ -1,27 +1,18 @@
 from constantes import *
-from plataforma import Platform, NewPlatform
-from coin import Coin
+from plataforma import TilePlatform
+from item import Item
 from auxiliar import (Aux, Json)
-from gui import *
 
-# NUEVO
+import pygame
+
 from characters import *
-
-
-# l_players, l_enemies, l_npc, l_coins = Json.load_character_json(PATH_JSON+'/characters.json')
-# tiles = Json.load_json_platforms(PATH_JSON+'/data_map.json') # para edición de mapa (solo para que puedan figurar todos los items en un menu para colocarlos despues en el mapa (en el json map.json))
-# game_tiles = Json.load_json_map(PATH_JSON+'/map.json') # niveles pre-definidos
-
-
-# obligatorios
-param_char = ('type', 'name', 'mvm_frame_rate', 'anim_frame_rate')
-
-param_actions = ('action', 'fileName', 'rows', 'columns',
-                 'f_from', 'f_to', 'custom_cut_w', 'step')
 
 
 # CHEQUEOS
 ''' 
+param_char = ('type', 'name', 'mvm_frame_rate', 'anim_frame_rate')
+
+param_actions = ('action', 'fileName', 'rows', 'columns', 'f_from', 'f_to', 'custom_cut_w', 'step')
 # 1
 def check_char_params(char_list: list):
     retorno = False
@@ -49,7 +40,8 @@ def check_action_params(char_list: list):
 # print(check_action_params(l_players))
 # '''
 
-game_tiles, l_players, l_enemies, l_coins = Json.load_json_level(PATH_JSON + '/level_1.json')
+game_levels = Json.load_json_info(PATH_JSON + '/levels.json')
+game_config = Json.load_json_info(PATH_JSON + '/config.json')
 
 def check_name(obj):
     name = None
@@ -66,7 +58,7 @@ def get_platforms(platforms):
     temp_list = []
     for obj in platforms:
         name = check_name(obj)
-        temp_list.append(NewPlatform(
+        temp_list.append(TilePlatform(
             name=name,
             type=obj['type'],
             sub_type=obj['sub_type'],
@@ -74,11 +66,7 @@ def get_platforms(platforms):
             y=obj['y']
         ))
     return temp_list
-game_tiles = get_platforms(game_tiles)
 
-# Instanciar PJ's
-# primer modelo: [{player_1: Instancia}, {player_2: Instancia}]
-# segundo modelo: [Instancia, Instancia]
 def get_players(l_players):
     temp_list = []
     i = 1
@@ -103,7 +91,6 @@ def get_players(l_players):
             ))
         i += 1
     return temp_list
-l_players = get_players(l_players)
 
 def get_enemies(l_enemies):
     temp_list = []
@@ -122,42 +109,131 @@ def get_enemies(l_enemies):
                 x = enemy['x'],
                 y = enemy['y'],
                 speed_walk = enemy['speed_walk'],
+                points = enemy.get('points') or 10,
                 damage = enemy['damage'],
                 life = enemy['life'],
                 lives = enemy['lives']
             ))
-        # print(temp_list)
         i += 1
     return temp_list
-l_enemies = get_enemies(l_enemies)
 
-def get_coins(l_coins):
+def get_items(l_items):
     temp_list = []
     i = 1
-    for coin in l_coins:
-        temp_list.append(Coin(
+    for item in l_items:
+        temp_list.append(Item(
                 manager = '',
-                entity = f'coin_{i}',
-                c_type = coin['type'],
-                sub_type = coin['sub_type'],
-                name = coin['name'],
-                mvm_frame_rate = coin['mvm_frame_rate'],
-                anim_frame_rate = coin['anim_frame_rate'],
-                level_tiles = [],
+                entity = f'item_{i}',
+                c_type = item['type'],
+                sub_type = item['sub_type'],
+                name = item['name'],
+                mvm_frame_rate = item.get('mvm_frame_rate') or 1,
+                anim_frame_rate = item.get('anim_frame_rate') or 1,
+                rows=item.get('rows') or 1,
+                columns=item.get('columns') or 1,
+                points = item.get('points') or 0,
+                health = item.get('health') or 0,
+                bullets= item.get('bullets') or 0,
+                level_tiles = [],   
                 scale=50,
-                x = coin['x'],
-                y = coin['y']
+                x = item['x'],
+                y = item['y']
             ))
         i += 1
     return temp_list
-l_coins = get_coins(l_coins)
+
+def get_levels(levels, id):
+    return [{
+        'id': id,
+        'background': levels['background'],
+        'platform': get_platforms(levels['platforms']),
+        'players': get_players(levels['players']),
+        'enemies': get_enemies(levels['enemies']),
+        'items': get_items(levels['items']),  
+    }]
+
+def get_music(music):
+    return pygame.mixer.Sound(f'{PATH_SOUNDS}/{music}')
+
+def get_game_config(config):
+    pygame.mixer.init()
+    temp_dict = {'music':{}}
+    # load music
+    for key, value in config['music'].items():
+        temp_dict['music'][key] = get_music(value)
+    return temp_dict
+    # return {
+    #     'music':{
+    #         'background': get_music(config['music']['background']),
+    #         'coin': get_music(config['music']['coin']),
+    #         'helltaker': get_music(config['music']['helltaker']),
+    #         'jump': get_music(config['music']['jump']),
+    #         'menu': get_music(config['music']['menu']),
+    #         'select': get_music(config['music']['select']),
+    #         'shoot': get_music(config['music']['shoot'])
+    #     }        
+    # }
+# asd = get_game_config(game_config)
+# print('asd',asd)
+
+# level_map = get_levels(game_levels['level_1'], 'level_1')
+# print(level_map) 
+# print([game_levels['level_1']])
+
+# [
+#     {
+#         'id': 'level_1',
+#         'background': {'set': 'set_bg_01','type': 'city','image': 'all'},
+#         'platform': [ < TilePlatform Sprite(in 0 groups) > ],
+#         'players': [ < characters.character.Character object at 0x00000164F298B580 > ],
+#         'enemies': [ < characters.enemy.Enemy object at 0x00000164F298B640 > ],
+#         'coins': [ < coin.Coin object at 0x00000164F298B730 > ]
+#     }
+# ]
+
+# NEW SET LEVEL
+# level_map = [
+#     {
+#         'platform': game_tiles,
+#         'players': l_players,
+#         'enemies': l_enemies,
+#         'coins': l_coins,
+#     }
+# ]
+
+
 
 
 # SET LEVEL
+# level_map = {
+#     'level_1': {
+#         'background': [ "<  >" ],
+#         'platform': [ "< NewPlatform Sprite(in 0 groups) >"],
+#         'players': [ "< characters.character.Character object at 0x000001BA5DDC3E80 >" ],
+#         'enemies': [ "< characters.enemy.Enemy object at 0x000001BA5DDC3F40 >" ],
+#         'coins': [ "< coin.Coin object at 0x000001BA5DDCD070 >"]
+#     },
+#     'level_2': {
+#         'platform': [ "< NewPlatform Sprite(in 0 groups) >"],
+#         'players': [ "< characters.character.Character object at 0x000001BA5DDD0A90 >" ],
+#         'enemies': [],
+#         'coins': []
+#     }
+# }
 
-level_map = {
-    'platform': game_tiles,
-    'players': l_players,
-    'enemies': l_enemies,
-    'coins': l_coins,
-}
+# SET LEVEL
+""" level_map = [
+    {
+        'platform': game_tiles,
+        'players': l_players,
+        'enemies': l_enemies,
+        'coins': l_coins,
+    },
+    {
+        'platform': game_tiles,
+        'players': l_players,
+        'enemies': l_enemies,
+        'coins': l_coins,
+    }
+] """
+
