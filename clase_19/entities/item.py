@@ -1,6 +1,7 @@
-import pygame
-from auxiliar import Aux
-from constantes import *
+import pygame, sys
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
+from aux_func import *
 
 
 class Item:
@@ -18,18 +19,40 @@ class Item:
             points,
             health,
             bullets,
+            required,
             level_tiles=[],
             scale=32,
             x=0,
-            y=0
-            ):
+            y=0):
+        '''
+        This class represents an item that provide exp or health to player
+
+        :param manager: str
+        :param entity: str
+        :param c_type: str
+        :param sub_type: str
+        :param name: str
+        :param mvm_frame_rate: int
+        :param anim_frame_rate: int
+        :param rows: int
+        :param columns: int
+        :param points: int
+        :param health: int
+        :param bullets: int
+        :param required: bool
+        :param level_tiles: list
+        :param scale: int
+        :param x: int
+        :param y: int
+        '''
+
         self._manager = manager
         
         # Sprites
         self.type = c_type
         self.sub_type = sub_type
         self.name = name
-        self.item = Aux.get_surface_from_sprite(PATH_IMAGE + f'/{self.type}/{self.sub_type}/{self.name}.png', rows, columns)
+        self.item = Aux.Aux.get_surface_from_sprite(Const.PATH_IMAGE + f'/{self.type}/{self.sub_type}/{self.name}.png', rows, columns)
 
         # Platforms
         self.level_tiles = level_tiles
@@ -58,6 +81,7 @@ class Item:
         self.points = points
         self.health = health
         self.bullets = bullets
+        self.required = required
 
 
     def upd_animation(self, delta_ms):
@@ -81,8 +105,8 @@ class Item:
             self._manager.collide_rect()
 
     def draw(self, surface):
-        if DEBUG:
-            pygame.draw.rect(surface, RED, self.rect)
+        if Const.DEBUG:
+            pygame.draw.rect(surface, Const.RED, self.rect)
         self.image = self.item[self.frame]
         self.image = pygame.transform.scale(self.image, (self.scale ,self.scale))
         

@@ -1,8 +1,8 @@
-############################
-# Importación de modulos
-############################
+##############################
+# Import manager modules
+##############################
+
 from . import (
-    control_manager as Game_mng,
     bullet_manager as Bullet_mng,
     enemy_manager as Enemy_mng,
     game_manager as Game_mng,

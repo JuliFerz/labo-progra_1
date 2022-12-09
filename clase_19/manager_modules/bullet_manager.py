@@ -1,14 +1,20 @@
-from constantes import *
+import sys
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
+
 
 class BulletManager:
     def __init__(self, game_manager, music_manager):
+        '''
+        This class represents a bullet manager. It can detect if the bullet collide with an enemy, with platforms, or even, with a player
+
+        :param game_manager: object
+        :param music_manager: object
+        '''
         self.__game_manager = game_manager
         self.music_manager = music_manager
         self.bullet_group = []
 
-    # todas las colisiones de las balas aca
-    # cada bala tiene su "dueño" (quien dispara), ya que si yo (pj) mato a un enemigo
-    # esa bala al colisionar con el enemigo lo debe hacer desaparecer y darme exp
     def horizontal_collide(self):
         for i, bullet in enumerate(self.bullet_group):
             for tile in self.__game_manager.list_platform:
@@ -19,7 +25,6 @@ class BulletManager:
             
             for enemy in self.__game_manager.list_enemies:
                 if bullet.rect.colliderect(enemy.rect_collition):
-                    # Subscribe damage
                     enemy._manager.get_damage(enemy.entity, bullet.rect_pj, bullet.pj_instance)
                     self.music_manager.update('impact')
                     del self.bullet_group[i]
@@ -32,7 +37,7 @@ class BulletManager:
                         del self.bullet_group[i]
                         break
 
-            if bullet.rect.x >= ANCHO_VENTANA + bullet.rect.w or bullet.rect.x <= 0 - bullet.rect.w:
+            if bullet.rect.x >= Const.WIDTH_SCREEN + bullet.rect.w or bullet.rect.x <= 0 - bullet.rect.w:
                 self.music_manager.update('impact')
                 del self.bullet_group[i]
 
@@ -42,6 +47,3 @@ class BulletManager:
                 bullet.update()
                 bullet.draw(self.__game_manager.surface)
             self.horizontal_collide()
-
-    def draw(self):
-        pass

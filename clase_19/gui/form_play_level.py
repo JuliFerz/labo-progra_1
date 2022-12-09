@@ -1,21 +1,15 @@
 import pygame, sys
-from gui.constantes import * # REVISAR
-# from gui.gui_button import Button
-# from gui.gui_label import Label
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
 from level import Level
 from gui.form_gui import Form
 from gui.sub_form_pause_game import SubFormPauseGame
 from gui.sub_form_game_hud import SubFormGameHud
-from gui.gui_label import Label
-# from gui.sub_form_finish_level import SubFormFinishLevel
-# from settings import level_map
 import time
 
 
 class FormPlayLevel(Form):
     def __init__(self, name, main_surface, x, y, w, h, color_background, color_border, active, running, music):
-        # self.x, self.y = x+100, y+100 
-        # self.w, self.h = w-200, h-200
         super().__init__(name, main_surface, x, y, w, h, color_background,  color_border, active,)
         self.music_manager = music
         self.playing_music = False
@@ -37,20 +31,17 @@ class FormPlayLevel(Form):
             y=self.slave_rect.h/2,
             w=500,
             h=500,
-            color_background=BROWN,
+            color_background=Const.BROWN,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/settings/table.png',
             color_border='',
             active=False,
             music=music
             )
-        # print(self.sub_form_pause_game.slave_rect)
-        
-        self.pause_time = 0 # REVISAR no lo uso
-
 
     def get_background(self, l_image):
         self.background_image = pygame.image.load(
             '{}/locations/{}/{}/{}.png'.format(
-                PATH_IMAGE,
+                Const.PATH_IMAGE,
                 l_image['set'],
                 l_image['type'],
                 l_image['image']
@@ -66,13 +57,11 @@ class FormPlayLevel(Form):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     if self.running:
-                        # pausar musica
                         self.running = False
                         self.level.running = False
                         self.sub_form_pause_game.active=True
                         self.playing_music = False
                     else:
-                        # activar musica
                         self.running = True
                         self.level.running = True
                         self.sub_form_pause_game.active=False
@@ -80,7 +69,7 @@ class FormPlayLevel(Form):
     def change_level(self, level, id):
         self.restart_time = time.perf_counter()
         self.running = True 
-        self.finish = False # FIXED acceer nuevamente al menu tras ganar
+        self.finish = False
         self.win = False
         self.lose = False
 
@@ -93,7 +82,6 @@ class FormPlayLevel(Form):
             music_manager=self.music_manager
         )
         self.background_image = self.get_background(self.game_level[0]['background'])
-
 
         self.sub_form_game_hud = SubFormGameHud(
             name='sub_form_game_hud', 
@@ -119,7 +107,6 @@ class FormPlayLevel(Form):
         self.score = player.score
         self.life = player.life
         self.bullets = player.qty_bullets
-
 
     def update(self, event_list, delta_ms):
         if self.active and not self.playing_music:
@@ -150,9 +137,7 @@ class FormPlayLevel(Form):
                 self.active = False
                 super().on_click('form_finish_level')
 
-        
         self.draw()
-
     
         if not self.running and self.finish:
             self.level.run(delta_ms)
@@ -162,32 +147,17 @@ class FormPlayLevel(Form):
             self.sub_form_game_hud.update(self.score, self.life, self.bullets, self.current_time)
             self.level.run(delta_ms)
             
-        # pasar al PJ
         self.get_key_event(event_list)
-    
-    """ def update(self, event_list, delta_ms):
-        self.draw()
 
-        # print('ASDASDASD', self.level.level_data['players'][0].score)
-
-        if not self.running:
-            self.sub_form_pause_game.update(event_list)
-
-        # self.label_title.draw()
-        self.sub_form_game_hud.update(event_list, 0)
-        
-         # pasar al PJ
-        self.get_key_event(event_list)
-        self.level.run(delta_ms) """
 
     def draw(self): 
         super().draw()
-        # if not self.finish:
         if self.sub_form_pause_game.active:
             self.main_surface.blit(
-                self.sub_form_pause_game.slave_surface,
-                self.sub_form_pause_game.slave_rect)
-        # else:
+                self.sub_form_pause_game.slave_background,
+                self.sub_form_pause_game.slave_background_rect)
+                
+            self.sub_form_pause_game.draw()
         elif self.running:
             self.slave_surface.blit(
                 self.sub_form_game_hud.slave_surface,
@@ -195,13 +165,3 @@ class FormPlayLevel(Form):
             )
         elif self.finish:
             self.on_click('form_finish_level')
-            # self.slave_background.blit(
-            #     self.sub_form_level_selector.slave_background,
-            #     self.sub_form_level_selector.slave_background_rect)
-            pass
-            # print('EEEEE')
-        
-        
-        # self.slave_surface.blit(self.background_image, self.slave_rect)
-
-

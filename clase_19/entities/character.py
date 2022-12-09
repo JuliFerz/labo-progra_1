@@ -1,6 +1,8 @@
-import pygame
-from auxiliar import Aux
-from constantes import *
+import pygame, sys
+import sys
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
+from aux_func import *
 
 
 class Character:
@@ -22,6 +24,26 @@ class Character:
             damage=0.1,
             life=50,
             lives=1):
+        '''
+        This class represents a player that can attack enemies, take items and gain exp
+
+        :param manager: str
+        :param entity: str
+        :param c_type: str
+        :param name: str
+        :param animations: list
+        :param mvm_frame_rate: int
+        :param anim_frame_rate: int
+        :param control_type: str
+        :param level_tiles: list
+        :param x: int
+        :param y: int
+        :param speed_walk: int
+        :param jump_height: int
+        :param damage: int
+        :param life: int
+        :param lives: int
+        '''
         self._manager = manager
         
         # Sprites
@@ -73,6 +95,7 @@ class Character:
         self.is_jumping = False
         self.is_on_floor = False
         self.is_falling = False
+        self.on_tile_moving = False
 
         # others
         self.damage = damage
@@ -95,7 +118,7 @@ class Character:
                 anim["step"] = 1
 
             self.animations.update(
-                {anim['action']: Aux.get_surface_from_sprite(PATH_IMAGE + f'/{self.type}/players/{self.name}/{anim["fileName"]}', anim["rows"], anim["columns"], anim["custom_cut_w"], anim["step"])[anim["f_from"]:anim["f_to"]]})
+                {anim['action']: Aux.Aux.get_surface_from_sprite(Const.PATH_IMAGE + f'/{self.type}/players/{self.name}/{anim["fileName"]}', anim["rows"], anim["columns"], anim["custom_cut_w"], anim["step"])[anim["f_from"]:anim["f_to"]]})
         return self.animations
 
     def control(self):
@@ -127,7 +150,6 @@ class Character:
 
             elif (not list_keys[pygame.K_j] and not mouse_key_pressed[0]) and not self.can_shoot:
                 self.can_shoot = True
-
 
         if self.control_type == 'B':
             ## X MOVEMENT ##
@@ -189,8 +211,8 @@ class Character:
         self.apply_gravity()
 
     def apply_gravity(self):
-        self.direction.y += GRAVITY
-        if self.direction.y > GRAVITY + 2:
+        self.direction.y += Const.GRAVITY
+        if self.direction.y > Const.GRAVITY + 2:
             self.is_falling = True
             self.is_on_floor = False
 
@@ -207,11 +229,23 @@ class Character:
 
     def vertical_collide(self):
         self.move_rect_y()
+        self.on_tile_moving = False
         for tile in self.level_tiles:
             if tile.rect_collition.colliderect(self.rect_collition):
                 self.is_jumping = False
                 if self.direction.y > 0:  # top - on floor
                     self.rect_collition.bottom = tile.rect_collition.top
+
+                    if tile.x_to and tile.direction.x != 0:
+                        self.direction.x = tile.direction.x
+                        self.on_tile_moving = True
+                        if tile.direction.x < 0:
+                            self.rect.x += tile.direction.x 
+                            self.rect_collition.x += tile.direction.x 
+                        else:
+                            self.rect.x += tile.direction.x 
+                            self.rect_collition.x += tile.direction.x 
+
                     self.rect.bottom = self.rect_collition.bottom
                     self.is_on_floor = True
                     self.can_jump = True
@@ -222,6 +256,8 @@ class Character:
                     self.is_falling = True
                 self.direction.y = 0
 
+            
+
     def get_animation(self, delta_ms):
         if self.direction.y < 0 and self.is_jumping or self.is_falling:
             self.animation = self.animations['jump']
@@ -230,8 +266,9 @@ class Character:
         else:
             if self.is_on_floor:
                 if self.direction.x != 0:
-                    self.animation = self.animations['walk']
-                    self.check_frame_index()
+                    if not self.on_tile_moving:
+                        self.animation = self.animations['walk']
+                        self.check_frame_index()
                 else:
                     self.animation = self.animations['stay']
                     self.check_frame_index()
@@ -265,9 +302,9 @@ class Character:
             self.upd_animation(delta_ms)
 
     def draw(self, surface):
-        if DEBUG:
-            pygame.draw.rect(surface, RED, self.rect)
-            pygame.draw.rect(surface, BLUE, self.rect_collition)
-        self.image = pygame.transform.flip(self.animation[self.frame], self.flip_x, False)
+        if Const.DEBUG:
+            pygame.draw.rect(surface, Const.RED, self.rect)
+            pygame.draw.rect(surface, Const.BLUE, self.rect_collition)
+        self.image = pygame.transform.flip(self.animation[self.frame], self.flip_x, False).convert_alpha()
 
         surface.blit(self.image, self.rect)

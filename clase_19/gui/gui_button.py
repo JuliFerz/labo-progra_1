@@ -1,16 +1,13 @@
 import pygame
-from gui.constantes import * # REVISAR
 from gui.gui_widget import Widget
 
 
 class Button(Widget):
-    # colocar image en vez de color
     def __init__(self, main_surface, main_rect, x, y, w, h, color_background, color_border, on_click, on_click_param, text, text_pos, font, font_size, font_color, on_click_param_aux='', slave_background='', active=True):
         super().__init__(main_surface, main_rect, x, y, w, h, color_background, color_border, slave_background)
         pygame.font.init()
         self.active = active
 
-        # form surface (screen -> form_surface -> [button_surface])
         self.main_surface = main_surface
         self.main_rect = main_rect
 
@@ -26,7 +23,6 @@ class Button(Widget):
         self.font_color = font_color
 
     def click_collition(self, mouse_xy):
-        # colisionar SOLO con botones que estén dentro del segundo form
         if self.slave_background:
             if self.slave_background_rect_collide.collidepoint(mouse_xy) and \
                 self.main_rect.collidepoint(mouse_xy):
@@ -40,18 +36,15 @@ class Button(Widget):
                 self.main_rect.collidepoint(mouse_xy):
                 
                 if self.on_click_param_aux or self.on_click_param_aux == 0:
-                    # print('[ENTRE]', self.on_click_param, self.on_click_param_aux)
                     self.on_click(self.on_click_param, self.on_click_param_aux)
                 else:
                     self.on_click(self.on_click_param)
 
     def get_mouse_click(self, event_list):
-        # print(pygame.mouse.get_pos())
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 self.click_collition(event.pos)
             
-
     def render(self):
         if self.slave_background:
             self.text_render = self.font.render(self._text, True, self.font_color)

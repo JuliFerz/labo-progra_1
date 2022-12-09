@@ -1,11 +1,9 @@
 import pygame, sys
-from gui.constantes import * # REVISAR
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
 from gui.gui_button import Button
 from gui.form_gui import Form
-from gui.sub_form_pause_game import SubFormPauseGame
 from gui.gui_label import Label
-
-from settings import get_levels
 
 
 class FormFinishLevel(Form):
@@ -17,41 +15,30 @@ class FormFinishLevel(Form):
         self.form_play_level = form_play_level
 
         # table background
-        self.table_img = pygame.image.load(f'{PATH_IMAGE}/gui/jungle/settings/table.png')
+        self.table_img = pygame.image.load(f'{Const.PATH_IMAGE}/gui/jungle/settings/table.png')
         self.table_img = pygame.transform.scale(self.table_img,(self.w - self.w/4, self.h - self.h/5))
         self.rect_table_img = self.table_img.get_rect(center=(self.slave_rect.centerx-100, self.slave_rect.centery-100))
         self.rect_table_img.w, self.rect_table_img.h = self.slave_rect.w, self.slave_rect.h
 
         # icon win
-        self.icon_img_win = pygame.image.load(f'{PATH_IMAGE}/gui/jungle/you_win/header.png')
+        self.icon_img_win = pygame.image.load(f'{Const.PATH_IMAGE}/gui/jungle/you_win/header.png')
         self.icon_img_win = pygame.transform.scale(self.icon_img_win,(self.w/2 - self.w/5, self.h/2 - self.h/4))
         self.rect_icon_img_win = self.icon_img_win.get_rect(center=(self.slave_rect.centerx-100, self.slave_rect.top + (self.h/8)-100))
         self.rect_icon_img_win.w, self.rect_icon_img_win.h = self.slave_rect.w, self.slave_rect.h
 
         # score table
-        self.score_table_img = pygame.image.load(f'{PATH_IMAGE}/gui/jungle/you_lose/bg.png')
+        self.score_table_img = pygame.image.load(f'{Const.PATH_IMAGE}/gui/jungle/you_lose/bg.png')
         self.score_table_img = pygame.transform.scale(self.score_table_img,(self.w/2 , self.h/2 + self.h/8))
         self.rect_score_table_img = self.score_table_img.get_rect(center=(self.slave_rect.centerx-100, self.slave_rect.top + (self.h/3)+30))
         self.rect_score_table_img.w, self.rect_score_table_img.h = self.slave_rect.w, self.slave_rect.h
 
-        # submit button
-        # self.score_table_img = pygame.image.load(f'{PATH_IMAGE}/gui/jungle/you_lose/bg.png')
-        # self.score_table_img = pygame.transform.scale(self.score_table_img,(self.w/2 , self.h/2 + self.h/8))
-        # self.rect_score_table_img = self.score_table_img.get_rect(center=(self.slave_rect.centerx-100, self.slave_rect.top + (self.h/3)+30))
-        # self.rect_score_table_img.w, self.rect_score_table_img.h = self.slave_rect.w, self.slave_rect.h
-
-
-        
-        # hacer pantalla cuando pierda el pjk
-        self.icon_img_lose = pygame.image.load(f'{PATH_IMAGE}/gui/jungle/you_lose/header.png')
+        self.icon_img_lose = pygame.image.load(f'{Const.PATH_IMAGE}/gui/jungle/you_lose/header.png')
         self.icon_img_lose = pygame.transform.scale(self.icon_img_lose,(self.w/2 - self.w/5, self.h/2 - self.h/4))
         self.rect_icon_img_lose = self.icon_img_lose.get_rect(center=(self.slave_rect.centerx-100, self.slave_rect.top + (self.h/8)-100))
         self.rect_icon_img_lose.w, self.rect_icon_img_lose.h = self.slave_rect.w, self.slave_rect.h
 
-
-
         # text
-        self.font = pygame.font.Font(PATH_FONT, 25)
+        self.font = pygame.font.Font(Const.PATH_FONT, 25)
         self.input_user_name = ''
         self.text_surface = self.font.render(self.input_user_name, True, 'white')
 
@@ -60,21 +47,18 @@ class FormFinishLevel(Form):
         # text time
         self.text_time_surface = self.font.render('', True, 'white')
 
-        
-
         self.static_label = Label(
-            # inherit_rect=self,
             main_surface=self.slave_background,
             main_rect=self.slave_background_rect,
             x=self.slave_background_rect.w/2,
             y=self.slave_background_rect.h/5,
             w=500,
             h=40,
-            color_background=VIOLET, # change to background img
-            slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+            color_background=Const.VIOLET,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png',
             text='Save score?',
             text_pos='center',
-            font=PATH_FONT,
+            font=Const.PATH_FONT,
             font_size=25,
             font_color='white')
         self.name_label = Label(
@@ -84,11 +68,11 @@ class FormFinishLevel(Form):
             y=self.slave_background_rect.h/3-50,
             w=120,
             h=40,
-            color_background=VIOLET, # change to background img
-            slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+            color_background=Const.VIOLET,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png',
             text='Name',
             text_pos='left',
-            font=PATH_FONT,
+            font=Const.PATH_FONT,
             font_size=25,
             font_color='white')
         self.score_label = Label(
@@ -98,11 +82,11 @@ class FormFinishLevel(Form):
             y=self.slave_background_rect.h/3,
             w=120,
             h=40,
-            color_background=VIOLET, # change to background img
-            slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+            color_background=Const.VIOLET,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png',
             text='Score',
             text_pos='left',
-            font=PATH_FONT,
+            font=Const.PATH_FONT,
             font_size=25,
             font_color='white')
         self.time_label = Label(
@@ -112,11 +96,11 @@ class FormFinishLevel(Form):
             y=self.slave_background_rect.h/3 + 50,
             w=120,
             h=40,
-            color_background=VIOLET, # change to background img
-            slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+            color_background=Const.VIOLET,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png',
             text='Time',
             text_pos='left',
-            font=PATH_FONT,
+            font=Const.PATH_FONT,
             font_size=25,
             font_color='white')
         self.exit_button = Button(
@@ -126,14 +110,14 @@ class FormFinishLevel(Form):
             y=self.slave_background_rect.h/3 + 235,
             w=300,
             h=40,
-            color_background=VIOLET,
-            slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+            color_background=Const.VIOLET,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png',
             color_border='',
             on_click=self.on_click,
             on_click_param='exit',
             text='Exit to desktop',
             text_pos='left',
-            font=PATH_FONT,
+            font=Const.PATH_FONT,
             font_size=25,
             font_color='white')
         self.main_menu_button = Button(
@@ -143,14 +127,14 @@ class FormFinishLevel(Form):
             y=self.slave_background_rect.h/3 + 235,
             w=300,
             h=40,
-            color_background=VIOLET,
-            slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+            color_background=Const.VIOLET,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png',
             color_border='',
             on_click=self.on_click,
             on_click_param='form_main_menu',
             text='Main menu',
             text_pos='left',
-            font=PATH_FONT,
+            font=Const.PATH_FONT,
             font_size=25,
             font_color='white')
         self.submit_button = Button(
@@ -160,20 +144,19 @@ class FormFinishLevel(Form):
             y=self.slave_background_rect.h/2 ,
             w=150,
             h=50,
-            color_background=VIOLET,
-            slave_background=f'{PATH_IMAGE}/gui/jungle/rating/btn.png',
+            color_background=Const.VIOLET,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/rating/btn.png',
             color_border='',
             on_click=self.on_click,
-            on_click_param='submit_record', # REVISAR
+            on_click_param='submit_record',
             text='',
             text_pos='left',
-            font=PATH_FONT,
+            font=Const.PATH_FONT,
             font_size=25,
             font_color='white')
 
     def on_click(self, id):
         if id == 'submit_record':
-            # self.music_manager.update('select')
             self.form_play_level.level.game_manager.create_record(
                 self.input_user_name,
                 self.form_play_level.finish_score,
@@ -201,7 +184,6 @@ class FormFinishLevel(Form):
             self.music_manager.update('select')
             self.playing_music = True
     
-
         self.get_key_event(event_list)
 
         # text
@@ -214,7 +196,6 @@ class FormFinishLevel(Form):
             # buttons
             self.submit_button.draw()
             self.submit_button.update(event_list)
-
 
         self.score_label.draw()
         self.time_label.draw()
@@ -244,23 +225,3 @@ class FormFinishLevel(Form):
                 self.slave_background.blit(self.icon_img_win, self.rect_icon_img_win)
             elif self.form_play_level.lose:
                 self.slave_background.blit(self.icon_img_lose, self.rect_icon_img_lose)
-
-
-    # def draw(self):
-    #     super().draw()
-    #     if self.form_play_level.win:
-    #         # print('ASDASD')
-    #         self.slave_background.blit(self.table_img, self.rect_table_img)
-    #         self.slave_background.blit(self.score_table_img, self.rect_score_table_img)
-
-    #         # text blits
-    #         self.slave_background.blit(self.text_surface, (self.name_label.slave_widget_rect.x + 150,self.name_label.slave_widget_rect.y+10))
-    #         self.slave_background.blit(self.text_score_surface, (self.score_label.slave_widget_rect.x + 150,self.score_label.slave_widget_rect.y+10))
-    #         self.slave_background.blit(self.text_time_surface, (self.time_label.slave_widget_rect.x + 150,self.time_label.slave_widget_rect.y+10))
-
-    #         self.slave_background.blit(self.icon_img_win, self.rect_icon_img_win)
-
-    #     elif self.form_play_level.lose:
-    #         self.slave_background.blit(self.icon_img_lose, self.rect_icon_img_lose)
-
-    #         pass

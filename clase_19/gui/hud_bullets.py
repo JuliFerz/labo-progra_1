@@ -1,12 +1,7 @@
 import pygame, sys
-from gui.constantes import * # REVISAR
-from gui.gui_button import Button
-from gui.form_gui import Form
-from gui.gui_label import Label
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
 from gui.gui_widget import Widget
-from gui.gui_responsive_label import ResponsiveLabel
-
-from settings import get_levels
 
 
 class HudBullets(Widget):
@@ -14,8 +9,6 @@ class HudBullets(Widget):
         self.x, self.y, self.w, self.h = x, y, w, h
         self.color_background = color_background
         self.color_border = color_border
-
-        # form surface (screen -> form_surface -> [button_surface])
         self.main_surface = main_surface
         self.main_rect = main_rect
 
@@ -30,8 +23,7 @@ class HudBullets(Widget):
 
         # image BG
         self.bg_image = pygame.image.load(
-            f'{PATH_IMAGE}/gui/set_gui_01/Data_Border/Bars/Bar_Background01.png'
-            # f'{PATH_IMAGE}/gui/jungle/load_bar/bg.png'
+            f'{Const.PATH_IMAGE}/gui/set_gui_01/Data_Border/Bars/Bar_Background01.png'
         )
         self.bg_image = pygame.transform.scale(self.bg_image,(self.w, self.h))
 
@@ -42,8 +34,7 @@ class HudBullets(Widget):
 
         # image 
         self.bullet_image = pygame.image.load(
-            f'{PATH_IMAGE}/gui/set_gui_01/Data_Border/Bars/Bar_Segment01.png'
-            # f'{PATH_IMAGE}/gui/set_gui_01/Comic/Bars/Bar_Segment08.png'
+            f'{Const.PATH_IMAGE}/gui/set_gui_01/Data_Border/Bars/Bar_Segment01.png'
         )
 
         # rect
@@ -52,7 +43,7 @@ class HudBullets(Widget):
         self.rect_img.w, self.rect_img.h = self.slave_rect_collide.w, self.slave_rect_collide.h
 
         # values
-        self.max_bullets = max_bullets # REVISAR si lo voy a usar o no
+        self.max_bullets = max_bullets
         self.bullets = value
 
         self.qty_bullets = self.get_bullets(self.bullets)
@@ -65,11 +56,9 @@ class HudBullets(Widget):
         y = self.rect_img.y
         for i in range(qty_bullets):
             surface = self.bullet_image
-
             x += w_bullet
-            # print('XY:',x, y)
             
-            w_bullet = self.rect_img.w / qty_bullets # 300 (w) / 10 (balas) -> 30 (w) por (bala)
+            w_bullet = self.rect_img.w / qty_bullets
             h_bullet = self.slave_rect_collide.h
             surface = pygame.transform.scale(surface,(w_bullet, h_bullet))
             rect = surface.get_rect(topleft=(x, y))
@@ -84,7 +73,7 @@ class HudBullets(Widget):
         try:
             del self.qty_bullets[-1]
         except:
-            print(self.qty_bullets)
+            print('EXCEPT_hud_bullets',self.qty_bullets)
     
     def draw(self):
         self.main_surface.blit(self.bg_image, self.rect_bg_img)

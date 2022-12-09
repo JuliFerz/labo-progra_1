@@ -2,6 +2,9 @@ import sqlite3
 from constantes import *
 
 class Sql:
+    '''
+    This class represents all the queries that are used in the game
+    '''
     @staticmethod
     def create_table():
         with sqlite3.connect(f'{PATH_DB}/pygame_database.db') as connection:

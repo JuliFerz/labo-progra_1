@@ -1,13 +1,8 @@
 import pygame, sys
-from gui.constantes import * # REVISAR
-from gui.gui_button import Button
-from gui.form_gui import Form
-from gui.gui_label import Label
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
 from gui.gui_widget import Widget
-from gui.gui_responsive_label import ResponsiveLabel
 import time
-
-from settings import get_levels
 
 
 class HudTime(Widget):
@@ -16,7 +11,6 @@ class HudTime(Widget):
         self.color_background = color_background
         self.color_border = color_border
 
-        # form surface (screen -> form_surface -> [button_surface])
         self.main_surface = main_surface
         self.main_rect = main_rect
 
@@ -31,7 +25,7 @@ class HudTime(Widget):
 
         # image BG
         self.bg_image = pygame.image.load(
-            f'{PATH_IMAGE}/gui/jungle/bubble/table.png'
+            f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png'
         )
         self.bg_image = pygame.transform.scale(self.bg_image,(self.w, self.h))
 
@@ -42,7 +36,7 @@ class HudTime(Widget):
 
         # image 
         self.clock_img = pygame.image.load(
-            f'{PATH_IMAGE}/gui/jungle/bubble/clock.png'
+            f'{Const.PATH_IMAGE}/gui/jungle/bubble/clock.png'
         )
         self.clock_img = pygame.transform.scale(self.clock_img,(self.w/2 - self.w/4, self.h+self.h/4))
         # rect
@@ -62,7 +56,7 @@ class HudTime(Widget):
         self.text_render = self.font.render(time.strftime('%M:%S', time.gmtime(time_play)), True, self.font_color)
 
         if int(time_play) >= 50:
-            self.font_color = RED
+            self.font_color = Const.RED
     
     def draw(self):
         self.main_surface.blit(self.bg_image, self.rect_bg_img)

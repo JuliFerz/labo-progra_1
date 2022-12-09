@@ -1,8 +1,6 @@
 import pygame
-from gui.constantes import * # REVISAR
 
 
-# cosas de la gráfica
 class Widget:
     def __init__(self, main_surface, main_rect, x, y, w, h, color_background, color_border='', slave_background=''):
         self.main_surface = main_surface
@@ -21,12 +19,12 @@ class Widget:
                 self.y + self.main_rect.y
             ))
         
-        self.slave_background = '' # TEST REVISAR borrar
+        self.slave_background = ''
         if slave_background:
             try:
                 self.slave_background = pygame.image.load(slave_background).convert_alpha()
             except:
-                print('💀 💀 ROMPI 💀 💀', slave_background, 'WIDGET')
+                print('EXCEPT_gui_widget', slave_background)
             self.slave_background = pygame.transform.scale(self.slave_background,(self.w, self.h))
             self.slave_background_rect = self.slave_background.get_rect(
                 center=(self.x, self.y))
@@ -36,12 +34,6 @@ class Widget:
                     self.x + self.main_rect.x, 
                     self.y + self.main_rect.y
                 ))
-
-            # self.slave_widget_rect_collide = self.slave_background.get_rect(
-            # center=(
-            #     self.x + self.main_rect.x,
-            #     self.y + self.main_rect.y
-            # ))
 
     def get_text_pos(self, pos):
         if self.slave_background:
@@ -64,15 +56,8 @@ class Widget:
                 self.text_pos = (self.slave_widget_rect_collide.w/4, 0)
         return tuple(map(lambda el: int(el), self.text_pos))
 
-    def render(self):
-        pass
-
-    def update(self):
-        pass
-
     def draw(self):
         if self.slave_background:
             self.main_surface.blit(self.slave_background,self.slave_background_rect)
         else:
             self.main_surface.blit(self.slave_widget_surface,self.slave_widget_rect)
-        

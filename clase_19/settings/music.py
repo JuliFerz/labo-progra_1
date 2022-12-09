@@ -1,5 +1,11 @@
 class Music:
     def __init__(self, obj_music, volume = 1):
+        '''
+        This class represents the game music. It can play, play in loop, stop, or change volume music
+
+        :param obj_music: obj
+        :param volume: int
+        '''
         self.obj_music = obj_music
         self.volume = volume
     

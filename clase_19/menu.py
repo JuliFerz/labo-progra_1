@@ -1,8 +1,5 @@
-# more like level manager
 import pygame
-from constantes import *
-from settings import get_game_config
-from music import Music
+from settings import *
 from gui.form_main_menu import FormMainMenu
 from gui.form_main_menu_level_selection import FormMainMenuLevelSelection
 from gui.form_play_level import FormPlayLevel
@@ -10,7 +7,7 @@ from gui.form_settings import FormSettings
 from gui.form_finish_level import FormFinishLevel
 from gui.form_scores import FormScores
 from manager_modules import *
-from sql import Sql
+
 
 class Menu:
     def __init__(self, screen, game_levels, game_config):
@@ -18,7 +15,7 @@ class Menu:
         self.game_levels = game_levels
         self.game_config = self.setup_config(game_config)
         self.music_manager = Music_mng.MusicManager(self.music)
-        self.sql = Sql()
+        self.sql = Sql.Sql()
         self.start_db()
         self.setup_level()
 
@@ -26,20 +23,19 @@ class Menu:
         self.sql.create_table()
 
     def setup_config(self, game_config):
-        self.config = get_game_config(game_config)
-        self.music = Music(self.config['music'])
+        self.config = Sett.get_game_config(game_config)
+        self.music = Music.Music(self.config['music'])
 
-    ## Crear todas las instancias ##
     def setup_level(self):
         self.form_main_menu = FormMainMenu(
             name='form_main_menu',
             main_surface=self.master_surface,
             x=50,
             y=50,
-            w=ANCHO_VENTANA - 100,
-            h=ALTO_VENTANA - 100,
-            color_background=RED,
-            slave_background=f'{PATH_IMAGE}/gui/jungle/settings/bg.png',
+            w=Const.WIDTH_SCREEN - 100,
+            h=Const.HEIGHT_SCREEN - 100,
+            color_background=Const.RED,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/settings/bg.png',
             color_border='',
             active=True,
             music=self.music_manager)
@@ -48,10 +44,10 @@ class Menu:
             main_surface=self.master_surface,
             x=50,
             y=50,
-            w=ANCHO_VENTANA - 100,
-            h=ALTO_VENTANA - 100,
-            color_background=RED,
-            slave_background=f'{PATH_IMAGE}/gui/jungle/settings/bg.png',
+            w=Const.WIDTH_SCREEN - 100,
+            h=Const.HEIGHT_SCREEN - 100,
+            color_background=Const.RED,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/settings/bg.png',
             color_border='',
             active=False,
             qty_levels=len(self.game_levels),
@@ -62,9 +58,9 @@ class Menu:
             main_surface=self.master_surface,
             x=0,
             y=0,
-            w=ANCHO_VENTANA,
-            h=ALTO_VENTANA,
-            color_background=RED,
+            w=Const.WIDTH_SCREEN,
+            h=Const.HEIGHT_SCREEN,
+            color_background=Const.RED,
             color_border='',
             active=False,
             running=False,
@@ -74,10 +70,10 @@ class Menu:
             main_surface=self.master_surface,
             x=50,
             y=50,
-            w=ANCHO_VENTANA - 100,
-            h=ALTO_VENTANA - 100,
-            color_background=RED,
-            slave_background=f'{PATH_IMAGE}/gui/jungle/settings/bg.png',
+            w=Const.WIDTH_SCREEN - 100,
+            h=Const.HEIGHT_SCREEN - 100,
+            color_background=Const.RED,
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/settings/bg.png',
             color_border='',
             active=False,
             music=self.music_manager)
@@ -86,10 +82,10 @@ class Menu:
             main_surface=self.master_surface,
             x=100,
             y=100,
-            w=ANCHO_VENTANA - 200,
-            h=ALTO_VENTANA - 200,
+            w=Const.WIDTH_SCREEN - 200,
+            h=Const.HEIGHT_SCREEN - 200,
             color_background='',
-            slave_background=f'{PATH_IMAGE}/gui/jungle/settings/bg.png',
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/settings/bg.png',
             color_border='',
             active=False,
             music=self.music_manager,
@@ -99,10 +95,10 @@ class Menu:
             main_surface=self.master_surface,
             x=100,
             y=100,
-            w=ANCHO_VENTANA - 200,
-            h=ALTO_VENTANA - 200,
+            w=Const.WIDTH_SCREEN - 200,
+            h=Const.HEIGHT_SCREEN - 200,
             color_background='',
-            slave_background=f'{PATH_IMAGE}/gui/jungle/settings/bg.png',
+            slave_background=f'{Const.PATH_IMAGE}/gui/jungle/settings/bg.png',
             color_border='',
             active=False,
             music=self.music_manager,
@@ -123,8 +119,7 @@ class Menu:
         elif self.form_scores.active:
             self.form_scores.update(event_list)
 
-        for event in event_list:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.pos)
-        
-        # print(pygame.mouse.get_pos())
+        if Sett.DEBUG:
+            for event in event_list:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(event.pos)

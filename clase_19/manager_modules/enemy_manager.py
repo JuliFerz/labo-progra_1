@@ -4,6 +4,12 @@ import random
 
 class EnemyManager():
     def __init__(self, game_manager, music_manager):
+        '''
+        This class represents a manager for enemies. It allows to enemy to see and hit damage to player, and more stuff
+
+        :param game_manager: object
+        :param music_manager: object
+        '''
         self.__game_manager = game_manager
         self.music_manager = music_manager
         self.pj_instance = ''
@@ -27,7 +33,6 @@ class EnemyManager():
                 self.__game_manager.eliminate_enemy(i)
                 self.music_manager.update('explosion')
                 self.pj_instance.score += enemy.points
-                # print('TE MATÓ',pj_instance)
                 break
 
     def horizontal_collide_pj(self, entity):
@@ -64,6 +69,3 @@ class EnemyManager():
     def update(self):
         self.detect_vision()
         self.update_dir_movement()
-
-    def draw(self):
-        pass

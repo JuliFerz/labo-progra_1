@@ -1,20 +1,13 @@
 import pygame, sys
-from gui.constantes import * # REVISAR
-from gui.gui_button import Button
-from gui.form_gui import Form
-from gui.gui_label import Label
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
 from gui.gui_widget import Widget
-from gui.gui_responsive_label import ResponsiveLabel
-import time
-
-from settings import get_levels
 
 
 class HudBar(Widget):
     def __init__(self, main_surface, main_rect, x, y, w, h):
         self.x, self.y, self.w, self.h = x, y, w, h
 
-        # form surface (screen -> form_surface -> [button_surface])
         self.main_surface = main_surface
         self.main_rect = main_rect
 
@@ -29,7 +22,7 @@ class HudBar(Widget):
 
         # image BG
         self.bg_image = pygame.image.load(
-            f'{PATH_IMAGE}/gui/jungle/match3/down.png'
+            f'{Const.PATH_IMAGE}/gui/jungle/match3/down.png'
         )
         self.bg_image = pygame.transform.scale(self.bg_image,(self.w, self.h))
 

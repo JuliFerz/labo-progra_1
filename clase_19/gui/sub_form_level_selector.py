@@ -1,9 +1,14 @@
 import pygame, sys
-from gui.constantes import * # REVISAR
+# from gui.constantes import * # REVISAR
+import sys
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
+
 from gui.gui_button import Button
 from gui.form_gui import Form
 
-from settings import get_levels
+# from settings import get_levels
+from settings import *
 
 
 class SubFormLevelSelector(Form):
@@ -23,9 +28,9 @@ class SubFormLevelSelector(Form):
         # self.slave_surface = pygame.Surface((self.w, self.h))
         # self.slave_rect = self.slave_surface.get_rect(topleft=(self.x, self.y))
     
-        # self.background_img = pygame.image.load(f'{PATH_IMAGE}/gui/background.png').convert_alpha()
+        # self.background_img = pygame.image.load(f'{Const.PATH_IMAGE}/gui/background.png').convert_alpha()
         # self.background_rect = self.background_img.get_rect(topleft=(0,0))
-        # self.background_img = pygame.transform.scale(self.background_img,(ANCHO_VENTANA, ALTO_VENTANA))
+        # self.background_img = pygame.transform.scale(self.background_img,(WIDTH_SCREEN, HEIGHT_SCREEN))
 
         if slave_background:
             # image
@@ -62,17 +67,17 @@ class SubFormLevelSelector(Form):
                     y=self.slave_background_rect.h/6 + y,
                     w=400,
                     h=60,
-                    color_background=BLUE,
-                    slave_background=f'{PATH_IMAGE}/gui/jungle/bubble/table.png',
+                    color_background=Const.BLUE,
+                    slave_background=f'{Const.PATH_IMAGE}/gui/jungle/bubble/table.png',
                     color_border='', # think in how button image works while pressing click on it - animation
                     on_click=self.on_click,
                     on_click_param='form_play_level',
                     on_click_param_aux=f'level_{i+1}',
                     text='Level {}'.format(i+1),
                     text_pos='left',
-                    font=PATH_FONT,
+                    font=Const.PATH_FONT,
                     font_size=25,
-                    font_color='black'
+                    font_color='white'
                 )
             )
             y += 70
@@ -80,7 +85,7 @@ class SubFormLevelSelector(Form):
 
 
     def instance_level(self, id):
-        self.level = get_levels(self.game_levels[id], id)
+        self.level = Sett.get_levels(self.game_levels[id], id)
     
     def on_click(self, id_form, id):
         self.instance_level(id)

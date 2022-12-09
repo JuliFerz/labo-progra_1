@@ -1,13 +1,7 @@
 import pygame, sys
-from gui.constantes import * # REVISAR
-from gui.gui_button import Button
-from gui.form_gui import Form
-from gui.gui_label import Label
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
 from gui.gui_widget import Widget
-from gui.gui_responsive_label import ResponsiveLabel
-import time
-
-from settings import get_levels
 
 
 class HudScore(Widget):
@@ -16,7 +10,6 @@ class HudScore(Widget):
         self.color_background = color_background
         self.color_border = color_border
 
-        # form surface (screen -> form_surface -> [button_surface])
         self.main_surface = main_surface
         self.main_rect = main_rect
 
@@ -31,7 +24,7 @@ class HudScore(Widget):
 
         # image BG
         self.bg_image = pygame.image.load(
-            f'{PATH_IMAGE}/gui/jungle/match3/table_2.png'
+            f'{Const.PATH_IMAGE}/gui/jungle/match3/table_2.png'
         )
         self.bg_image = pygame.transform.scale(self.bg_image,(self.w, self.h))
 
@@ -42,7 +35,7 @@ class HudScore(Widget):
 
         # image 
         self.star_img = pygame.image.load(
-            f'{PATH_IMAGE}/gui/jungle/upgrade/star.png'
+            f'{Const.PATH_IMAGE}/gui/jungle/upgrade/star.png'
         )
         self.star_img = pygame.transform.scale(self.star_img,(self.w/2 - self.w/4, self.h+self.h/4))
         # rect

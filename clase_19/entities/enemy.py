@@ -1,7 +1,7 @@
-import pygame
-import random
-from auxiliar import Aux
-from constantes import *
+import pygame, sys, random
+sys.path.append('../clase_19/settings')
+from settings import constantes as Const
+from aux_func import *
 
 
 class Enemy:
@@ -23,6 +23,27 @@ class Enemy:
             damage=0.1,
             life=50,
             lives=1):
+        '''
+        This class represents a enemy that can attack players and decrease their lives
+
+        :param manager: str
+        :param entity: str
+        :param c_type: str
+        :param name: str
+        :param animations: list
+        :param separate_files: bool
+        :param mvm_frame_rate: int
+        :param anim_frame_rate: int
+        :param points: int
+        :param level_tiles: list
+        :param x: int
+        :param y: int
+        :param speed_walk: int
+        :param damage: int
+        :param life: int
+        :param lives: int
+        '''
+
         self._manager = manager
          
         # LISTAS - Sprites
@@ -65,7 +86,7 @@ class Enemy:
         self.speed = self.speed_walk
         self.speed_run = self.speed * 2
         self.direction = pygame.math.Vector2(0, 0)
-        self.random_x = random.randrange(0, ANCHO_VENTANA - self.rect_collition.w)
+        self.random_x = random.randrange(0, Const.WIDTH_SCREEN - self.rect_collition.w)
         self.walking = False
 
         # time & others
@@ -94,8 +115,8 @@ class Enemy:
 
             if self.separate_files:
                 self.animations.update(
-                    {anim['action']: Aux.get_surface_from_files(
-                        PATH_IMAGE + f'/{self.type}/enemies/{self.name}/{anim["fileName"]}/',
+                    {anim['action']: Aux.Aux.get_surface_from_files(
+                        Const.PATH_IMAGE + f'/{self.type}/enemies/{self.name}/{anim["fileName"]}/',
                         anim["fileName"],
                         anim["qty_images"],
                         w=100,
@@ -119,14 +140,12 @@ class Enemy:
     def move_rect_y(self):
         self.rect.y += self.direction.y
         self.rect_collition.y += self.direction.y
-        # self.rect_detect.y += self.direction.y # no se pone aca porque direction.y varia mucho entre 0 a 1.5 (aprox), entonces el rect_detect se mueve mucho
         self.apply_gravity() 
 
     def apply_gravity(self):
-        self.direction.y += GRAVITY
-        if self.direction.y > GRAVITY + 2:
+        self.direction.y += Const.GRAVITY
+        if self.direction.y > Const.GRAVITY + 2:
             self.is_falling = True
-            # self.is_on_floor = False
 
     def do_walk(self, flip=False):
         if flip:
@@ -141,14 +160,14 @@ class Enemy:
                 self.direction.x = self.speed
         self.flip_x = flip
 
-    def auto_movement(self, x_from=0, x_to=ANCHO_VENTANA):
+    def auto_movement(self, x_from=0, x_to=Const.WIDTH_SCREEN):
         self.walking = True
-        if x_to == ANCHO_VENTANA: x_to = ANCHO_VENTANA - self.rect.w
+        if x_to == Const.WIDTH_SCREEN: x_to = Const.WIDTH_SCREEN - self.rect.w
 
         if not self.in_vision_pj:
             self.random_x = random.randrange(x_from, x_to)
             self.frame = 0
-            if DEBUG:
+            if Const.DEBUG:
                 print('AUTO_CONTROL')
                 print(f'pj: {self.rect.x} random: {self.random_x}')
 
@@ -166,8 +185,6 @@ class Enemy:
                     self.rect_collition.bottom = tile.rect_collition.top
                     self.rect.centery = self.rect_collition.centery
                     self.direction.y = 0
-                    # self.is_on_floor = True
-                    # self.can_jump = True
                     self.is_falling = False
                 if self.direction.y < 0:  # bottom - on ceiling
                     self.rect_collition.top = tile.rect_collition.bottom
@@ -213,7 +230,7 @@ class Enemy:
     def restart_auto_movement(self):
         if not self.collide_pj: self.direction.x = 0 
         self.time_enemy = pygame.time.get_ticks()
-        self.cooldown = random.randrange(1000, 5000, 1000) # puedo poner saltos de a 500
+        self.cooldown = random.randrange(1000, 5000, 1000)
 
     def _control(self):
         self.rect_detect.y = self.rect.y - (self.rect.h/4)
@@ -234,14 +251,12 @@ class Enemy:
             # rect.y
             self.vertical_collide()
 
-            # Si esta caminando y no esta colisionando, chequear si llegue al punto
             if (self.walking and not self.is_collide_x):
                 if (self.direction.x > 0 and self.rect.centerx >= self.random_x) or \
                     (self.direction.x < 0 and self.rect.centerx <= self.random_x):
                     self.walking = False
                     self.restart_auto_movement()
             
-            # Si esta caminando y ve al pj, no esta colisionando con plataforma
             elif self.walking and self.in_vision_pj:
                 self.is_collide_x = False
 
@@ -258,21 +273,18 @@ class Enemy:
             self.frame = 0
 
     def update(self, delta_ms):
-        # movement
         self._control() # auto_movement
         self.upd_movement(delta_ms)
-        # vertical_collide -> move_rect_y
-        # horizontal_collide -> move_rect_x
 
         # animation
         self.get_animation(delta_ms)
         self.upd_animation(delta_ms)
 
     def draw(self, surface):
-        if DEBUG:
-            pygame.draw.rect(surface, RED, self.rect)
-            pygame.draw.rect(surface, GREEN, self.rect_detect)
-            pygame.draw.rect(surface, BLUE, self.rect_collition)
-        self.image = pygame.transform.flip(self.animation[int(self.frame)], self.flip_x, False)
+        if Const.DEBUG:
+            pygame.draw.rect(surface, Const.RED, self.rect)
+            pygame.draw.rect(surface, Const.GREEN, self.rect_detect)
+            pygame.draw.rect(surface, Const.BLUE, self.rect_collition)
+        self.image = pygame.transform.flip(self.animation[int(self.frame)], self.flip_x, False).convert_alpha()
         
         surface.blit(self.image, self.rect)
